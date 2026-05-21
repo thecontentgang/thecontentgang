@@ -1,0 +1,55 @@
+
+
+/* GOOGLE FONT */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+/* GLOBAL FONT */
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
+/* HEADLINES */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Outfit', sans-serif;
+}
+
+html {
+  overflow-y: scroll; /* Forces the browser to keep the scrollbar width reserved */
+}
+
+
+@keyframes wordSwap {
+  0%,
+  18% {
+    transform: translateY(0%);
+  }
+
+  25%,
+  43% {
+    transform: translateY(-25%);
+  }
+
+  50%,
+  68% {
+    transform: translateY(-50%);
+  }
+
+  75%,
+  93% {
+    transform: translateY(-75%);
+  }
+
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animate-wordSwap {
+  animation: wordSwap 8s infinite;
+}
