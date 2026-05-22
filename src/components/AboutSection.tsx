@@ -17,16 +17,16 @@ const aboutCards: AboutCard[] = [
     icon: Users,
     highlight: null,
     content:
-      "The Content Gang is a performance-driven digital marketing agency. We partner with ambitious brands to deliver modern web development, engaging content, and full-scale growth solutions.",
+      "The Content Gang is a full-stack growth agency built for ambitious brands. We don't just market your business, we engineer its digital presence from the ground up.",
     side: 'left',
   },
   {
     id: 'the-results',
     title: 'The Results We Bring',
     icon: TrendingUp,
-    highlight: '₹4.5 Crore in 4 months',
+    highlight: '₹12.5 Crore in 90 days',
     content:
-      "We focus on numbers that matter. We recently generated ₹4.5 crore in revenue for a premium interior design firm in just 4 months through targeted lead generation and high-converting funnels.",
+      "We focus on numbers that matter. In the last 90 days, we've generated over ₹12.5 crore in revenue, delivered 10,000+ leads, and clocked 28M+ views across brands we've proudly partnered with.",
     side: 'right',
   },
   {
@@ -35,7 +35,7 @@ const aboutCards: AboutCard[] = [
     icon: Layers,
     highlight: null,
     content:
-      "We build complete digital ecosystems. From lightning-fast websites to content that ranks and converts, our team handles web development, engaging content,influencer marketing, paid ads, and SEO all under one roof.",
+      "We run the full playbook: content that captures attention, ads that convert, websites that sell, and SEO that compounds. One team, one strategy, zero silos.",
     side: 'left',
   },
   {
@@ -44,7 +44,7 @@ const aboutCards: AboutCard[] = [
     icon: Target,
     highlight: null,
     content:
-      "We don't just chase likes and impressions—we chase real ROI. By combining technical web expertise with creative marketing, we make sure every rupee you spend translates into measurable business growth.",
+      "We don't just chase likes and impressions. We chase real ROI. By combining technical web expertise with creative marketing, we make sure every rupee you spend translates into measurable business growth.",
     side: 'right',
   },
 ];
@@ -135,7 +135,7 @@ export default function AboutSection() {
             {card.highlight}
           </span>
         )}
-        <p className="text-gray-400 text-xs sm:text-sm leading-relaxed font-light">{card.content}</p>
+        <p className="text-gray-200 text-xs sm:text-sm leading-relaxed font-light">{card.content}</p>
       </div>
     );
   };

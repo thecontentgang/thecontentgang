@@ -39,7 +39,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100dvh] pt-20 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
+      className="relative w-full min-h-[100dvh] pt-5 py-20 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
     >
       {/* === PREMIUM BACKGROUND === */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -57,7 +57,7 @@ export default function HeroSection() {
         {/* Top Badge */}
         <motion.div 
           variants={itemVariants} 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-gray-300 backdrop-blur-md mb-6 sm:mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-gray-300 backdrop-blur-md mt-10 mb-1 sm:mb-10"
         >
           <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D1513B]" />
           <span>Strategic Content & Digital Growth</span>
@@ -66,12 +66,12 @@ export default function HeroSection() {
         {/* HEADING */}
         <motion.h1 
           variants={itemVariants} 
-          className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-5 sm:mb-6 max-w-5xl text-white flex flex-col items-center justify-center w-full"
+          className="text-5xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-3 sm:mb-4 max-w-5xl text-white flex flex-col items-center justify-center w-full"
         >
           <span className="block">Content that</span> 
           
           {/* ROTATING TEXT */}
-          <span className="relative flex justify-center mt-2 sm:mt-1 sm:inline-flex sm:ml-3 text-center sm:text-left min-w-[280px] sm:min-w-[auto]">
+          <span className="relative flex justify-center mt-1 sm:mt-1 sm:inline-flex sm:ml-3 text-center sm:text-left min-w-[280px] sm:min-w-[auto]">
             <RotatingText
               texts={["connects.", "inspires.", "converts.", "scales brands."]}
               mainClassName="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] via-[#e38777] to-[#ffc5bc] overflow-hidden py-1.5 sm:py-2"
@@ -90,33 +90,73 @@ export default function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* SUBTEXT - Fixed width */}
-        <div className="w-full flex justify-center">
-          <motion.p
-            variants={itemVariants}
-            className="mt-2 text-sm sm:text-base md:text-lg text-gray-400 w-full max-w-[500px] sm:max-w-[550px] mb-8 sm:mb-10 font-light leading-relaxed px-2"
-          >
-            We help brands scale through strategic{" "}
-            <strong className="font-semibold text-gray-200">Content</strong>
-            , performance-driven{" "}
-            <strong className="font-semibold text-gray-200">Marketing</strong>
-            , high-converting{" "}
-            <strong className="font-semibold text-gray-200">Lead Generation</strong>
-            , and impactful{" "}
-            <strong className="font-semibold text-gray-200">Digital Experiences</strong>
-            . In the last{" "}
-            <strong className="font-semibold text-gray-200">90 days</strong>
-            , we've generated over{" "}
-            <strong className="font-semibold text-[#e38777]">28M+ views</strong>
-            , delivered{" "}
-            <strong className="font-semibold text-[#e38777]">10,000+ leads</strong>
-            , generated{" "}
-            <strong className="font-semibold text-[#e38777]">₹12.5Cr+ revenue</strong>
-            for clients, and partnered with{" "}
-            <strong className="font-semibold text-gray-200">50+ growing brands</strong>
-            .
-          </motion.p>
-        </div>
+        {/* SUBTEXT - Fixed width with Stats as Individual Buttons/Pills */}
+<div className="w-full flex justify-center">
+  <motion.div
+    variants={itemVariants}
+    className="mt-2 w-full max-w-[650px] mb-8 sm:mb-10 px-2 flex flex-col items-center text-center"
+  >
+    {/* Intro Text - Kept exactly as requested */}
+    <p className="text-sm sm:text-base md:text-lg text-gray-400 font-light leading-relaxed mb-6">
+      We help brands scale through strategic{" "}
+      <strong className="font-semibold text-gray-200">Content</strong>
+      , performance-driven{" "}
+      <strong className="font-semibold text-gray-200">Marketing</strong>
+      , <br /> and high-converting{" "}
+      <strong className="font-semibold text-gray-200">Lead Generation</strong>.
+    </p>
+
+    {/* Context Text */}
+    <p className="text-gray-400 text-sm sm:text-base mb-4">
+      In the last <strong className="font-semibold text-gray-200">90 days</strong>, we've:
+    </p>
+
+    {/* Stats Buttons Container - Centered and wrapping naturally */}
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
+      
+      {/* Button 1 */}
+      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span className="text-sm sm:text-base text-gray-300">
+          <strong className="font-semibold text-[#e38777]">28M+ views</strong>  Generated 
+        </span>
+      </div>
+
+      {/* Button 2 */}
+      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span className="text-sm sm:text-base text-gray-300">
+          <strong className="font-semibold text-[#e38777]">10,000+ leads</strong> Delivered 
+        </span>
+      </div>
+
+      {/* Button 3 */}
+      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span className="text-sm sm:text-base text-gray-300">
+          <strong className="font-semibold text-[#e38777]">₹12.5Cr+ revenue</strong> Generated
+        </span>
+      </div>
+
+      {/* Button 4 */}
+      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        <span className="text-sm sm:text-base text-gray-300">
+          <strong className="font-semibold text-[#e38777]">50+ brands</strong> Partnered 
+        </span>
+      </div>
+
+    </div>
+  </motion.div>
+</div>
 
         {/* BUTTONS */}
         <motion.div 
@@ -139,20 +179,7 @@ export default function HeroSection() {
           </button>
         </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          variants={itemVariants}
-          className="mt-12 sm:mt-16 flex flex-col items-center gap-2"
-        >
-          <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest">Scroll to explore</span>
-          <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1">
-            <motion.div 
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 rounded-full bg-[#D1513B]"
-            />
-          </div>
-        </motion.div>
+        
 
       </motion.div>
     </section>

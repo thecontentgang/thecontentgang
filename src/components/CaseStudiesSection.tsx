@@ -1,54 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { 
-  ArrowUpRight, 
-  Store, 
-  ChevronRight, 
+import { useState, useEffect } from 'react';
+import {
+  ArrowUpRight,
+  Store,
+  ChevronRight,
   ChevronLeft,
-  LineChart,
-  LayoutTemplate,
   ExternalLink,
-  Users,
-  Eye,
-  TrendingUp,
-  Calendar,
-  CreditCard,
-  Target,
-  Wrench,
-  ImageIcon
+  ImageIcon,
+  LayoutTemplate,
+  LineChart,
+
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { brandsData, type BrandCaseStudy, type ContentData, type LeadsData, type WebsiteData } from "./brandsData";
-
-// --- Custom Instagram SVG Icon ---
-const InstagramIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-  </svg>
-);
+import { brandsData, type BrandCaseStudy } from "./brandsData";
 
 // --- Safe Image Component (object-contain) ---
-const SafeImage = ({ 
-  src, 
-  fallbackSrc, 
-  alt, 
+const SafeImage = ({
+  src,
+  fallbackSrc,
+  alt,
   className,
-}: { 
-  src?: string; 
-  fallbackSrc?: string; 
-  alt: string; 
+}: {
+  src?: string;
+  fallbackSrc?: string;
+  alt: string;
   className?: string;
 }) => {
   const [hasError, setHasError] = useState(false);
@@ -77,9 +53,9 @@ const SafeImage = ({
       {!isLoaded && !hasError && (
         <div className="absolute inset-0 bg-[#0a0a0a] animate-pulse" />
       )}
-      <img 
-        src={displaySrc || fallbackSrc} 
-        alt={alt} 
+      <img
+        src={displaySrc || fallbackSrc}
+        alt={alt}
         className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         onError={handleError}
         onLoad={handleLoad}
@@ -89,15 +65,15 @@ const SafeImage = ({
 };
 
 // --- Safe Logo Component ---
-const SafeLogo = ({ 
-  logoImage, 
-  logoFallback, 
-  logoText, 
-  brandName 
-}: { 
-  logoImage?: string; 
-  logoFallback?: string; 
-  logoText: string; 
+const SafeLogo = ({
+  logoImage,
+  logoFallback,
+  logoText,
+  brandName
+}: {
+  logoImage?: string;
+  logoFallback?: string;
+  logoText: string;
   brandName: string;
 }) => {
   const [imgError, setImgError] = useState(false);
@@ -119,10 +95,10 @@ const SafeLogo = ({
           {logoText}
         </span>
       )}
-      <img 
-        src={logoSrc} 
+      <img
+        src={logoSrc}
         alt={`${brandName} logo`}
-        className={`w-full h-full object-contain p-1 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full object-cover ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
         style={{ mixBlendMode: 'screen' }}
         onLoad={() => setImgLoaded(true)}
         onError={() => { if (!imgError) setImgError(true); }}
@@ -147,8 +123,9 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
     label: string;
     linkUrl?: string;
   }> = [];
-  
-  if (brand.contentData) {
+
+  // Only push if image exists
+  if (brand.contentData?.image) {
     slides.push({
       id: "content",
       img: brand.contentData.image,
@@ -157,7 +134,8 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
       linkUrl: brand.contentData.instagramUrl,
     });
   }
-  if (brand.leadsData) {
+
+  if (brand.leadsData?.image) {
     slides.push({
       id: "leads",
       img: brand.leadsData.image,
@@ -165,7 +143,8 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
       label: "Ads & Performance",
     });
   }
-  if (brand.websiteData) {
+
+  if (brand.websiteData?.image) {
     slides.push({
       id: "website",
       img: brand.websiteData.image,
@@ -177,9 +156,11 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
 
   useEffect(() => {
     if (slides.length <= 1) return;
+
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 4000);
+
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -189,6 +170,13 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
 
   return (
     <div className="relative w-full h-full min-h-[350px] bg-[#0a0a0a] overflow-hidden group">
+      
+      <div className="absolute top-9 left-4 z-20">
+        <h3 className="text-white text-sm italic tracking-wide">
+          Results
+        </h3>
+      </div>
+
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -198,24 +186,22 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-0 bg-[#0a0a0a] p-8"
         >
-          <div 
-            className={`w-full h-full cursor-pointer flex items-center justify-center ${currentSlide.linkUrl ? 'cursor-pointer' : ''}`}
+          <div
+            className={`w-full h-full flex items-center justify-center ${
+              currentSlide.linkUrl ? "cursor-pointer" : ""
+            }`}
             onClick={() => {
               if (currentSlide.linkUrl) {
-                window.open(currentSlide.linkUrl, '_blank');
+                window.open(currentSlide.linkUrl, "_blank");
               }
             }}
           >
-            <img 
+            <img
               src={currentSlide.img}
               alt={currentSlide.label}
               className="w-full h-full object-contain"
             />
-            {currentSlide.linkUrl && (
-              <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <ExternalLink className="w-4 h-4 text-white" />
-              </div>
-            )}
+
             <div className="absolute bottom-4 left-4">
               <span className="text-white text-sm font-medium bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full">
                 {currentSlide.label}
@@ -227,38 +213,43 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
 
       {slides.length > 1 && (
         <>
-          {/* Navigation Arrows */}
-          <button 
-            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length); }}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70 hover:border-white/30"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(
+                (prev) => (prev - 1 + slides.length) % slides.length
+              );
+            }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70"
           >
             <ChevronLeft className="w-5 h-5 text-white" />
           </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % slides.length); }}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70 hover:border-white/30"
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex((prev) => (prev + 1) % slides.length);
+            }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70"
           >
             <ChevronRight className="w-5 h-5 text-white" />
           </button>
 
-          {/* Dots Indicator */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
             {slides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentIndex(idx);
+                }}
                 className={`h-1.5 rounded-full transition-all duration-500 ${
-                  currentIndex === idx ? "w-8 bg-white" : "w-1.5 bg-white/40 hover:bg-white/60"
+                  currentIndex === idx
+                    ? "w-8 bg-white"
+                    : "w-1.5 bg-white/40"
                 }`}
               />
             ))}
-          </div>
-
-          {/* Slide Counter */}
-          <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="text-white text-xs font-medium">
-              {currentIndex + 1} / {slides.length}
-            </span>
           </div>
         </>
       )}
@@ -277,8 +268,9 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
     label: string;
     linkUrl?: string;
   }> = [];
-  
-  if (brand.contentData) {
+
+  // Only push if image exists
+  if (brand.contentData?.image) {
     slides.push({
       id: "content",
       img: brand.contentData.image,
@@ -287,7 +279,8 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
       linkUrl: brand.contentData.instagramUrl,
     });
   }
-  if (brand.leadsData) {
+
+  if (brand.leadsData?.image) {
     slides.push({
       id: "leads",
       img: brand.leadsData.image,
@@ -295,7 +288,8 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
       label: "Ads & Performance",
     });
   }
-  if (brand.websiteData) {
+
+  if (brand.websiteData?.image) {
     slides.push({
       id: "website",
       img: brand.websiteData.image,
@@ -307,9 +301,11 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
 
   useEffect(() => {
     if (slides.length <= 1) return;
+
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 3500);
+
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -328,27 +324,25 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
           transition={{ duration: 0.3 }}
           className="absolute inset-0 bg-[#0a0a0a]"
         >
-          <div 
+          <div
             className="w-full h-full cursor-pointer"
             onClick={() => {
               if (currentSlide.linkUrl) {
-                window.open(currentSlide.linkUrl, '_blank');
+                window.open(currentSlide.linkUrl, "_blank");
               }
             }}
           >
-            <SafeImage 
-              src={currentSlide.img} 
+            <SafeImage
+              src={currentSlide.img}
               fallbackSrc={currentSlide.fallbackImg}
-              alt={currentSlide.label} 
-              className="w-full h-full" 
+              alt={currentSlide.label}
+              className="w-full h-full"
             />
-            {currentSlide.linkUrl && (
-              <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full p-1.5">
-                <ExternalLink className="w-3.5 h-3.5 text-white" />
-              </div>
-            )}
+
             <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-              <span className="text-white text-sm font-medium">{currentSlide.label}</span>
+              <span className="text-white text-sm font-medium">
+                {currentSlide.label}
+              </span>
             </div>
           </div>
         </motion.div>
@@ -356,25 +350,40 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
 
       {slides.length > 1 && (
         <>
-          <button 
-            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length); }}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex(
+                (prev) => (prev - 1 + slides.length) % slides.length
+              );
+            }}
             className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <ChevronLeft className="w-4 h-4 text-white" />
           </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % slides.length); }}
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentIndex((prev) => (prev + 1) % slides.length);
+            }}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <ChevronRight className="w-4 h-4 text-white" />
           </button>
+
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {slides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentIndex(idx);
+                }}
                 className={`h-1 rounded-full transition-all ${
-                  currentIndex === idx ? "w-5 bg-white" : "w-1.5 bg-white/40"
+                  currentIndex === idx
+                    ? "w-5 bg-white"
+                    : "w-1.5 bg-white/40"
                 }`}
               />
             ))}
@@ -384,102 +393,20 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
     </div>
   );
 };
-
-// --- Stat Badge ---
-const StatBadge = ({ 
-  icon: Icon, 
-  value, 
-  label,
-  colorClass = "text-[#D1513B]"
-}: { 
-  icon: React.ComponentType<{ className?: string }>; 
-  value: string; 
-  label: string;
-  colorClass?: string;
-}) => (
-  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-    <Icon className={`w-3.5 h-3.5 ${colorClass}`} />
-    <span className="text-white font-bold text-sm">{value}</span>
-    <span className="text-gray-500 text-xs">{label}</span>
-  </div>
-);
-
-// --- Content Stats ---
-const ContentStats = ({ data }: { data: ContentData }) => (
-  <div className="space-y-2.5">
-    <div className="flex items-center gap-2">
-      <InstagramIcon className="w-4 h-4 text-[#D1513B]" />
-      <h4 className="text-white font-semibold text-sm">Content & Social Media</h4>
-    </div>
-    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
-    <div className="flex flex-wrap gap-2">
-      <StatBadge icon={Users} value={data.followersGained} label="Followers" />
-      <StatBadge icon={Eye} value={data.views} label="Views" />
-    </div>
-    {data.instagramUrl && (
-      <a href={data.instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#D1513B] hover:text-[#e38777] transition-colors font-medium">
-        <InstagramIcon className="w-3.5 h-3.5" />
-        View Profile
-      </a>
-    )}
-  </div>
-);
-
-// --- Leads Stats ---
-const LeadsStats = ({ data }: { data: LeadsData }) => (
-  <div className="space-y-2.5">
-    <div className="flex items-center gap-2">
-      <LineChart className="w-4 h-4 text-[#D1513B]" />
-      <h4 className="text-white font-semibold text-sm">Performance Marketing</h4>
-    </div>
-    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
-    <div className="grid grid-cols-2 gap-2">
-      <StatBadge icon={Target} value={data.leadsGenerated} label="Leads" />
-      <StatBadge icon={TrendingUp} value={data.converted} label="Converted" colorClass="text-emerald-400" />
-      <StatBadge icon={Calendar} value={`${data.months}m`} label="Duration" />
-      <StatBadge icon={CreditCard} value={data.revenue} label="Revenue" colorClass="text-emerald-400" />
-    </div>
-  </div>
-);
-
-// --- Website Stats ---
-const WebsiteStats = ({ data }: { data: WebsiteData }) => (
-  <div className="space-y-2.5">
-    <div className="flex items-center gap-2">
-      <LayoutTemplate className="w-4 h-4 text-[#D1513B]" />
-      <h4 className="text-white font-semibold text-sm">Website Development</h4>
-    </div>
-    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
-    <div className="flex flex-wrap gap-1.5">
-      {data.features.map((feature, idx) => (
-        <span key={idx} className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-full text-xs font-medium text-gray-300">
-          <Wrench className="w-3 h-3 text-[#D1513B]" />
-          {feature}
-        </span>
-      ))}
-    </div>
-    {data.websiteLink && (
-      <a href={data.websiteLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#D1513B] hover:text-[#e38777] transition-colors font-medium">
-        <ExternalLink className="w-3.5 h-3.5" />
-        Visit Website
-      </a>
-    )}
-  </div>
-);
-
 export default function CaseStudiesSection() {
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth",
     });
   };
+
   return (
     <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-24 overflow-hidden max-w-[100vw]">
-      
+
       <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[120px] sm:blur-[150px] rounded-full pointer-events-none" />
-      
+
       {/* HEADER */}
-      <div className="max-w-[950px] mx-auto px-5 sm:px-8 lg:px-12 mb-12 sm:mb-14 text-center relative z-10">
+      <div className="max-w-[650px] mx-auto px-5 sm:px-8 lg:px-12 mb-12 sm:mb-14 text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[#D1513B] animate-pulse"></span>
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#D1513B] uppercase">
@@ -490,12 +417,12 @@ export default function CaseStudiesSection() {
           Growth that <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] to-[#e38777]">speaks.</span>
         </h2>
         <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto font-light">
-          We engineer complete digital ecosystems designed to dominate your market.
+          Behind every success story is a strategy that refused to fail.
         </p>
       </div>
 
-      {/* CASE STUDIES CARDS */}
-      <div className="max-w-[950px] mx-auto px-5 sm:px-8 lg:px-12 flex flex-col gap-6 sm:gap-8 relative z-10 w-full">
+      {/* CASE STUDIES CARDS - Reduced from 750px to 600px */}
+      <div className="max-w-[480px] mx-auto px-5 sm:px-6 lg:px-8 flex flex-col gap-6 sm:gap-8 relative z-10 md:w-2/3">
         {brandsData.map((brand, index) => (
           <motion.div
             key={brand.id}
@@ -505,88 +432,158 @@ export default function CaseStudiesSection() {
             transition={{ duration: 0.4, delay: index * 0.08 }}
             className="group relative flex flex-col lg:flex-row w-full bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-400 hover:border-[#D1513B]/20"
           >
-            {/* CONTENT SECTION */}
-            <div className="w-full lg:w-[50%] p-5 sm:p-6 lg:p-7 flex flex-col bg-[#0a0a0a]">
-              
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-transparent flex items-center justify-center shrink-0 overflow-hidden relative border border-white/[0.06]">
-                  <SafeLogo 
-                    logoImage={brand.logoImage}
-                    logoFallback={brand.logoFallback}
-                    logoText={brand.logoText}
-                    brandName={brand.brandName}
-                  />
+            {/* CONTENT SECTION - Redesigned */}
+            <div className="w-full lg:w-[50%] p-6 sm:p-8 flex flex-col bg-[#0a0a0a] border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+
+              {/* Top: Logo + Brand Name + Stats Row */}
+              <div className="flex items-center gap-4 mb-5">
+                {/* Logo */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/10 p-0.5 shrink-0">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-[#111]">
+                    <SafeLogo
+                      logoImage={brand.logoImage}
+                      logoFallback={brand.logoFallback}
+                      logoText={brand.logoText}
+                      brandName={brand.brandName}
+                    />
+                  </div>
                 </div>
+
+                {/* Brand Name + Stats */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight truncate">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
                     {brand.brandName}
                   </h3>
-                  {(brand.contentData as ContentData)?.instagramHandle && (
-                    <a
-                      href={`https://instagram.com/${(brand.contentData as ContentData).instagramHandle.replace('@', '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-0.5 text-xs text-gray-400 hover:text-[#D1513B] transition-colors"
-                    >
-                      <InstagramIcon className="w-3 h-3" />
-                      <span>{(brand.contentData as ContentData).instagramHandle}</span>
-                    </a>
-                  )}
-                </div>
-                {/* Service Pills */}
-                <div className="hidden sm:flex gap-1.5 shrink-0">
-                  {brand.services.includes("content") && (
-                    <span className="px-2.5 py-1 bg-[#D1513B]/10 border border-[#D1513B]/20 rounded-md text-[10px] font-semibold text-[#e38777]">Content</span>
-                  )}
-                  {brand.services.includes("leads") && (
-                    <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-[10px] font-semibold text-emerald-400">Leads</span>
-                  )}
-                  {brand.services.includes("website") && (
-                    <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-semibold text-blue-400">Web</span>
-                  )}
+                  <div className="flex flex-wrap gap-3 sm:gap-4">
+
+                    {brand.contentData?.followersGained && (
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#e38777]">{brand.contentData.followersGained}</h3>
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Followers Gained</p>
+                      </div>
+                    )}
+
+                    {brand.leadsData?.revenue && (
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#e38777]">{brand.leadsData.revenue}</h3>
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Revenue Generated</p>
+                      </div>
+                    )}
+                    {brand.leadsData?.months && (
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-[#e38777]">{brand.leadsData.months}</h3>
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Months</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Service Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5">
-                {brand.contentData && <ContentStats data={brand.contentData as ContentData} />}
-                {brand.leadsData && <LeadsStats data={brand.leadsData as LeadsData} />}
-                {brand.websiteData && <WebsiteStats data={brand.websiteData as WebsiteData} />}
-              </div>
-
-              {/* Mobile Service Pills */}
-              <div className="flex sm:hidden gap-1.5 mt-4 pt-4 border-t border-white/[0.06]">
+              {/* Service Icons Row */}
+              <div className="flex flex-col gap-3 mb-5">
                 {brand.services.includes("content") && (
-                  <span className="px-2.5 py-1 bg-[#D1513B]/10 border border-[#D1513B]/20 rounded-md text-[10px] font-semibold text-[#e38777]">Content</span>
+                  <div className="flex items-start gap-3">
+  <div className="mt-1 shrink-0">
+    <svg
+      className="w-4 h-4 text-[#D1513B]"
+      fill="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+    </svg>
+  </div>
+
+  <div className="flex flex-col">
+    <span className="text-gray-200 text-sm font-medium">
+      {brand.contentData?.serviceLabel || "Content Marketing"}
+    </span>
+
+    {brand.contentData?.marketingDescription && (
+      <p className="text-sm text-gray-300 leading-relaxed mt-1 max-w-[260px]">
+        {brand.contentData.marketingDescription}
+      </p>
+    )}
+  </div>
+</div>
+                  
                 )}
-                {brand.services.includes("leads") && (
-                  <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-[10px] font-semibold text-emerald-400">Leads</span>
-                )}
+                   {brand.services.includes("leads") && (
+  <div className="flex items-start gap-3">
+    <div className="mt-1 shrink-0">
+      <LineChart className="w-4 h-4 text-[#D1513B]" />
+    </div>
+
+    <div className="flex flex-col">
+      <span className="text-gray-200 text-sm font-medium">
+        Performance Marketing
+      </span>
+
+      {brand.leadsData?.marketingDescription && (
+        <p className="text-sm text-gray-300 leading-relaxed mt-1 max-w-[260px]">
+          {brand.leadsData.marketingDescription}
+        </p>
+      )}
+    </div>
+  </div>
+)}
+                  
                 {brand.services.includes("website") && (
-                  <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-semibold text-blue-400">Web</span>
+                  <div className="flex items-center gap-2">
+                    <LayoutTemplate className="w-4 h-4 text-[#D1513B]" />
+                    <span className="text-gray-300 text-sm">Website Creation</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Links Section */}
+              <div className="flex flex-wrap gap-3 pt-4 border-t border-white/[0.06]">
+                {brand.contentData?.instagramUrl && (
+                  <a
+                    href={brand.contentData.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs sm:text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+                    </svg>
+                    Instagram
+                  </a>
+                )}
+                {brand.websiteData?.websiteLink && (
+                  <a
+                    href={brand.websiteData.websiteLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs sm:text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Website
+                  </a>
                 )}
               </div>
             </div>
 
-            {/* IMAGES SECTION - Desktop Carousel */}
-            <div className="w-full lg:w-[50%] border-t lg:border-t-0 lg:border-l border-white/[0.06] bg-[#0a0a0a]">
-              {/* Mobile Carousel */}
-              <div className="lg:hidden">
-                <MobileCarousel brand={brand} />
-              </div>
-              
-              {/* Desktop Carousel */}
-              <div className="hidden lg:block h-full">
-                <DesktopCarousel brand={brand} />
-              </div>
-            </div>
+            {/* IMAGES SECTION - Carousel */}
+            {brand.id !== "jilamall" && brand.id !== "krimmy-thickshake" && (
+  <div className="w-full lg:w-[50%] bg-[#0a0a0a]">
+    
+    <div className="lg:hidden">
+      <MobileCarousel brand={brand} />
+    </div>
+
+    <div className="hidden lg:block h-full">
+      <DesktopCarousel brand={brand} />
+    </div>
+
+  </div>
+)}
           </motion.div>
         ))}
       </div>
 
       {/* FOOTER */}
-      <div className="max-w-[800px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
+      <div className="max-w-[550px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
         <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-8">
           <div className="w-10 h-10 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
             <Store className="w-5 h-5 text-[#D1513B]" />

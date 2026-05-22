@@ -13,39 +13,39 @@ const services = [
     title: 'Content Creation',
     category: 'Creative',
     description: 'Engaging, high-retention storytelling designed to capture attention and build genuine authority for your brand.',
-    tags: ['Script Writing', 'Shorts & Reels Edits', 'Video Production', 'Hosting'],
+    tags: ['Content Strategy','Host','Script Writing','Video Production', 'Post Production Edits', 'SEO Optimization', 'Thumbnail Design', 'Social Media Management', 'End to End Content Management' ],
     icon: Clapperboard,
   },
   {
     id: '02',
     title: 'Lead Generation',
     category: 'Acquisition',
-    description: 'Data-driven campaigns engineered to connect you with your ideal audience and build a reliable, high-quality pipeline.',
-    tags: ['Google Ads', 'Meta (Facebook)', 'YouTube Ads'],
+    description: 'Data-driven campaigns engineered to connect your brand with ideal audience and build a reliable, high-quality leads pipeline.',
+    tags: ['Video Ads Creation','Landing Page Design', 'Campaign Execution & optimization', 'Budget Optimization', 'Lead Filteration', 'Omnichannel Retargeting', 'Leads Tracking System',  'Conversion Rate Optimization',  'End to End Media Buying Management'],
     icon: Target,
   },
   {
     id: '03',
-    title: 'Social & Influencer',
-    category: 'Community',
-    description: 'Building authentic relationships and expanding your reach through thoughtful social media management and creator partnerships.',
-    tags: ['Social Media Marketing', 'Influencer Marketing', 'Brand Strategy'],
+    title: 'Influencer Marketing',
+    category: 'Creator Partnership',
+    description: 'Identifying, outreaching, and collaborating with creators whose audience aligns with your brand.',
+    tags: [ 'Brand Collaborations', 'Mega / Macro / Micro / Nano / UGC Influencers', 'Authenticity & Engagement Focused Campaigns', 'Performance Tracking & Optimization', 'End to End Influencer Marketing Management'],
     icon: Users,
   },
   {
     id: '04',
-    title: 'Web Development',
+    title: 'Web Design & Development',
     category: 'Engineering',
-    description: 'Lightning-fast, beautifully designed, and highly responsive web experiences that serve as the perfect digital home for your business.',
-    tags: ['Custom Websites', 'UI/UX Design', 'Web Apps'],
+    description: 'Lightning-fast, beautifully designed websites that turn visitors into engaged customers. Your best sales rep, working 24/7.',
+    tags: ['UI/UX Design', 'Custom Websites',  'Web Apps', 'Responsive Design', 'Fast Loading', 'E-commerce Solutions',  'SEO-Friendly',  'Sales Funnels', 'CMS Development', 'Full Stack Applications', 'User Tracking & Analytics',  'Security & Maintenance',],
     icon: Monitor,
   },
   {
     id: '05',
     title: 'SEO Optimization',
     category: 'Organic Growth',
-    description: 'Improving your digital footprint with sustainable search engine strategies so the right people find you effortlessly.',
-    tags: ['On-Page SEO', 'Technical SEO', 'Keyword Strategy'],
+    description: 'Attract the right audience effortlessly with sustainable, proven SEO strategies that dominate search results and turn every click into a customer.',
+    tags: ['SEO Audits', 'Local SEO','On-Page SEO', 'Technical SEO', 'Keyword Strategy', 'Traffic Generation', 'Brand Visibility', 'Domain Authority', 'Content Optimization', 'Backlink Building',   ],
     icon: Search,
   }
 ];
@@ -127,41 +127,48 @@ export default function ServicesSection() {
   };
 
   const HeaderText = (
-    <>
-      <div className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
-        <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-[#D1513B] animate-pulse"></span>
-        <span className="text-xs sm:text-sm font-medium tracking-[0.25em] text-[#D1513B] uppercase">
-          What We Do
-        </span>
-      </div>
+  <>
+    {/* Changed pt-20 to mt-20 to fix the badge height and added tighter bottom margin */}
+    <div className="inline-flex items-center gap-2 mt-16 sm:mt-20 mb-3 sm:mb-4 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
+      <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-[#D1513B] animate-pulse"></span>
+      <span className="text-xs sm:text-sm font-medium tracking-[0.25em] text-[#D1513B] uppercase">
+        What We Do
+      </span>
+    </div>
 
-      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-4 sm:mb-6 lg:mb-8 leading-[1.1] lg:leading-[0.95]">
-        <span className="block text-white">We build</span>
-        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
-          brands people
-        </span>
-        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#e38777] via-[#D1513B] to-[#ffb6a8]">
-          remember.
-        </span>
-      </h2>
+    {/* Reduced the bottom margins slightly to compress overall height */}
+    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-3 sm:mb-4 lg:mb-5 leading-[1.1] lg:leading-[0.95]">
+      <span className="block text-white">We build</span>
+      <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
+        brands people
+      </span>
+      <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#e38777] via-[#D1513B] to-[#ffb6a8]">
+        remember.
+      </span>
+    </h2>
 
-      <p className="text-gray-400 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-sm sm:max-w-md font-light">
-  We create content, run ads, build websites, and generate leads — everything you need to grow your brand and drive real revenue.
-</p>
-    </>
-  );
+    <p className="text-gray-400 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-sm sm:max-w-md font-light">
+      We create content, run ads, build websites, generate leads and everything you need to grow your brand and drive real revenue.
+    </p>
+  </>
+);
 
   const StatsAndCTA = (
     <div className="flex flex-col items-center lg:items-start w-full">
       <div className="flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 lg:gap-8 mb-8 lg:mb-12">
         <div>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">60+</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white">50+</h3>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Brands Scaled</p>
+        </div>
+         <div>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white">28M+</h3>
+          <p className="text-xs sm:text-sm text-gray-500 mt-1">Views Generate</p>
         </div>
         <div>
           <h3 className="text-2xl sm:text-3xl font-bold text-white">₹12.5Cr+</h3>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Revenue Generated</p>
         </div>
+       
         
       </div>
 
@@ -255,7 +262,7 @@ export default function ServicesSection() {
                       </div>
 
                       {/* Big number */}
-                      <span className="text-4xl sm:text-5xl lg:text-6xl font-black text-white/5 group-hover:text-[#D1513B]/10 transition-colors duration-500 absolute right-4 sm:right-6 top-4 sm:top-6 lg:static">
+                      <span className="text-4xl sm:text-5xl lg:text-6xl font-black text-white/90 group-hover:text-[#D1513B]/10 transition-colors duration-500 absolute right-4 sm:right-6 top-4 sm:top-6 lg:static">
                         {service.id}
                       </span>
                     </div>

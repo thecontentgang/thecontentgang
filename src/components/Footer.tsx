@@ -14,10 +14,10 @@ export default function Footer() {
         </p>
 
         <div className="flex items-center gap-4 sm:gap-6">
-          {['Instagram', 'LinkedIn', 'Twitter'].map((platform) => (
+          {['Instagram'].map((platform) => (
             <a
               key={platform}
-              href="#"
+              href="https://www.instagram.com/the.contentgang/"
               className="text-gray-500 hover:text-[#D1513B] text-[10px] sm:text-xs font-medium tracking-wide transition-colors duration-200"
             >
               {platform}

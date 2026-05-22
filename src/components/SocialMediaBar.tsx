@@ -89,36 +89,34 @@ export default function SocialSidebar() {
       </div>
 
       {/* Mobile - Bottom Fixed Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-white/10 px-2 py-2.5">
-        <div className="flex items-center justify-around max-w-[400px] mx-auto">
-          {socialLinks.map((link, index) => {
-            const Icon = link.icon;
-            return (
-              <motion.a
-                key={link.id}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="flex flex-col items-center gap-1"
-              >
-                <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform"
-                  style={{ backgroundColor: link.bgColor }}
-                >
-                  <Icon className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-[10px] text-gray-400 font-medium">
-                  {link.label}
-                </span>
-              </motion.a>
-            );
-          })}
+     {/* Mobile + Tablet Right Side */}
+<div className="md:hidden fixed right-3 bottom-24 z-50 flex flex-col gap-3">
+  {socialLinks.map((link, index) => {
+    const Icon = link.icon;
+
+    return (
+      <motion.a
+        key={link.id}
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.1 }}
+        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.1 }}
+        className="relative"
+      >
+        <div
+          className="w-12 h-12 rounded-full flex items-center justify-center shadow-xl"
+          style={{ backgroundColor: link.bgColor }}
+        >
+          <Icon className="w-5 h-5 text-white" />
         </div>
-      </div>
+      </motion.a>
+    );
+  })}
+</div>
     </>
   );
 }

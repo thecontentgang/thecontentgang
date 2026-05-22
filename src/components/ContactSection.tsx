@@ -91,7 +91,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-[10px] sm:text-xs text-gray-500 font-medium mb-0.5">Location</p>
-                  <p className="text-sm sm:text-base font-semibold text-gray-200">Kondapur,Hyderabad</p>
+                  <p className="text-sm sm:text-base font-semibold text-gray-200">Asian Suncity, Kondapur, Hyd</p>
                 </div>
               </div>
             </div>
