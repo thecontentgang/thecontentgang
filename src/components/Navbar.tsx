@@ -7,8 +7,6 @@ const navLinks = ['Services', 'CaseStudies', 'About Us', 'Contact'];
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // NEW: Hide nav pill while hero section is visible
   const [showNavPill, setShowNavPill] = useState(false);
 
   // Lock body scroll when mobile menu is open
@@ -24,7 +22,7 @@ export default function Navbar() {
     };
   }, [isMobileMenuOpen]);
 
-  // NEW: Detect hero section scroll
+  // Detect hero section scroll
   useEffect(() => {
     const handleScroll = () => {
       const heroHeight = window.innerHeight * 0.85;
@@ -45,7 +43,20 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 py-4 md:py-6 max-w-[100vw]">
+     <nav
+  className={`
+    fixed top-0 inset-x-0 z-50
+    px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24
+    py-4 md:py-2
+    max-w-[100vw]
+    transition-all duration-500
+    ${
+      showNavPill
+        ? "bg-black/30 backdrop-blur-xl border-b border-white/5"
+        : "bg-transparent border-b border-transparent"
+    }
+  `}
+>
         <div className="max-w-[1600px] mx-auto flex items-center justify-between w-full">
 
           {/* Left: Logo */}
@@ -55,9 +66,9 @@ export default function Navbar() {
                 src="/Content-LOGO.png"
                 alt="TheContentGang Logo"
                 className="
-                  h-10
-                  sm:h-12
-                  md:h-16
+                  h-18
+                  sm:h-20
+                  md:h-20
                   lg:h-24
                   w-auto
                   object-contain
@@ -95,41 +106,41 @@ export default function Navbar() {
                 {navLinks.map((item, index) => (
                   <a
                     key={item}
-                    href={`#${item.toLowerCase().replace(' ', '-')}`}
+                    href={`#${item.toLowerCase().replace(/\s+/g, "-").toLowerCase()}`}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
                     className="
-                      relative
-                      px-4
-                      lg:px-6
-                      py-2
-                      lg:py-2.5
-                      text-xs
-                      lg:text-sm
-                      font-medium
-                      text-gray-300
-                      transition-colors
-                      hover:text-white
-                    "
+      relative
+      px-4
+      lg:px-6
+      py-2
+      lg:py-2.5
+      text-xs
+      lg:text-sm
+      font-medium
+      text-gray-300
+      transition-colors
+      hover:text-white
+    "
                   >
                     {/* Hover Pill */}
                     {hoveredIndex === index && (
                       <motion.div
                         layoutId="nav-hover-pill"
                         className="
-                          absolute
-                          inset-0
-                          bg-[#e38777]/20
-                          border
-                          border-[#e38777]/30
-                          rounded-full
-                          -z-10
-                        "
+          absolute
+          inset-0
+          bg-[#e38777]/20
+          border
+          border-[#e38777]/30
+          rounded-full
+          -z-10
+        "
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{
-                          type: 'spring',
+                          type: "spring",
                           stiffness: 500,
                           damping: 30,
                         }}
@@ -139,6 +150,8 @@ export default function Navbar() {
                     <span className="relative z-10">{item}</span>
                   </a>
                 ))}
+
+
               </motion.div>
             )}
           </AnimatePresence>

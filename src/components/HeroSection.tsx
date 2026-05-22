@@ -39,7 +39,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100dvh] pt-5 py-20 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
+      className="relative w-full min-h-[100dvh] pt-5 py-14 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
     >
       {/* === PREMIUM BACKGROUND === */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -66,7 +66,7 @@ export default function HeroSection() {
         {/* HEADING */}
         <motion.h1 
           variants={itemVariants} 
-          className="text-5xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-3 sm:mb-4 max-w-5xl text-white flex flex-col items-center justify-center w-full"
+          className="text-6xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-3 sm:mb-4 max-w-5xl text-white flex flex-col items-center justify-center w-full"
         >
           <span className="block">Content that</span> 
           
@@ -111,50 +111,106 @@ export default function HeroSection() {
       In the last <strong className="font-semibold text-gray-200">90 days</strong>, we've:
     </p>
 
-    {/* Stats Buttons Container - Centered and wrapping naturally */}
-    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full">
-      
-      {/* Button 1 */}
-      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
-        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <span className="text-sm sm:text-base text-gray-300">
-          <strong className="font-semibold text-[#e38777]">28M+ views</strong>  Generated 
-        </span>
-      </div>
+    {/* Stats Buttons Container */}
+<div className="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-[700px] mx-auto">
 
-      {/* Button 2 */}
-      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
-        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <span className="text-sm sm:text-base text-gray-300">
-          <strong className="font-semibold text-[#e38777]">10,000+ leads</strong> Delivered 
-        </span>
-      </div>
+  {/* Button 1 */}
+  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+    <svg
+      className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
 
-      {/* Button 3 */}
-      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
-        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <span className="text-sm sm:text-base text-gray-300">
-          <strong className="font-semibold text-[#e38777]">₹12.5Cr+ revenue</strong> Generated
-        </span>
-      </div>
+    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+      <strong className="font-semibold text-[#e38777]">
+        28M+ views
+      </strong>{" "}
+      Generated
+    </span>
+  </div>
 
-      {/* Button 4 */}
-      <div className="inline-flex items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
-        <svg className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-        </svg>
-        <span className="text-sm sm:text-base text-gray-300">
-          <strong className="font-semibold text-[#e38777]">50+ brands</strong> Partnered 
-        </span>
-      </div>
+  {/* Button 2 */}
+  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+    <svg
+      className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
 
-    </div>
+    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+      <strong className="font-semibold text-[#e38777]">
+        10,000+ leads
+      </strong>{" "}
+      Delivered
+    </span>
+  </div>
+
+  {/* Button 3 */}
+  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+    <svg
+      className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+
+    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+      <strong className="font-semibold text-[#e38777]">
+        ₹12.5Cr+ revenue
+      </strong>{" "}
+      Generated
+    </span>
+  </div>
+
+  {/* Button 4 */}
+  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+    <svg
+      className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+
+    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+      <strong className="font-semibold text-[#e38777]">
+        50+ brands
+      </strong>{" "}
+      Partnered
+    </span>
+  </div>
+
+</div>
   </motion.div>
 </div>
 
