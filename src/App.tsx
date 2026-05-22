@@ -5,6 +5,7 @@ import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import CaseStudiesSection from "./components/CaseStudiesSection";
 import ServicesSection  from "./components/ServicesSection";
+import SocialMediaBar from "./components/SocialMediaBar";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
     <AboutSection />
     <ContactSection />
     <Footer />
+    <SocialMediaBar />
     </>
   )
 }

@@ -51,6 +51,11 @@ const services = [
 ];
 
 export default function ServicesSection() {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -163,7 +168,7 @@ export default function ServicesSection() {
         </div>
       </div>
 
-      <button className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group">
+      <button onClick={() => scrollTo("contact")} className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group">
         Let's Scale Your Brand
         <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
       </button>

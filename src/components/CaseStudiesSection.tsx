@@ -136,6 +136,136 @@ const SafeLogo = ({
   );
 };
 
+// --- Desktop Carousel ---
+const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const slides: Array<{
+    id: string;
+    img: string;
+    fallbackImg?: string;
+    label: string;
+    linkUrl?: string;
+  }> = [];
+  
+  if (brand.contentData) {
+    slides.push({
+      id: "content",
+      img: brand.contentData.image,
+      fallbackImg: brand.contentData.fallbackImage,
+      label: "Content & Social",
+      linkUrl: brand.contentData.instagramUrl,
+    });
+  }
+  if (brand.leadsData) {
+    slides.push({
+      id: "leads",
+      img: brand.leadsData.image,
+      fallbackImg: brand.leadsData.fallbackImage,
+      label: "Ads & Performance",
+    });
+  }
+  if (brand.websiteData) {
+    slides.push({
+      id: "website",
+      img: brand.websiteData.image,
+      fallbackImg: brand.websiteData.fallbackImage,
+      label: "Website",
+      linkUrl: brand.websiteData.websiteLink,
+    });
+  }
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  if (slides.length === 0) return null;
+
+  const currentSlide = slides[currentIndex];
+
+  return (
+    <div className="relative w-full h-full min-h-[350px] bg-[#0a0a0a] overflow-hidden group">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 bg-[#0a0a0a] p-8"
+        >
+          <div 
+            className={`w-full h-full cursor-pointer flex items-center justify-center ${currentSlide.linkUrl ? 'cursor-pointer' : ''}`}
+            onClick={() => {
+              if (currentSlide.linkUrl) {
+                window.open(currentSlide.linkUrl, '_blank');
+              }
+            }}
+          >
+            <img 
+              src={currentSlide.img}
+              alt={currentSlide.label}
+              className="w-full h-full object-contain"
+            />
+            {currentSlide.linkUrl && (
+              <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ExternalLink className="w-4 h-4 text-white" />
+              </div>
+            )}
+            <div className="absolute bottom-4 left-4">
+              <span className="text-white text-sm font-medium bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full">
+                {currentSlide.label}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {slides.length > 1 && (
+        <>
+          {/* Navigation Arrows */}
+          <button 
+            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length); }}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70 hover:border-white/30"
+          >
+            <ChevronLeft className="w-5 h-5 text-white" />
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % slides.length); }}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-black/70 hover:border-white/30"
+          >
+            <ChevronRight className="w-5 h-5 text-white" />
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {slides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  currentIndex === idx ? "w-8 bg-white" : "w-1.5 bg-white/40 hover:bg-white/60"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Slide Counter */}
+          <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="text-white text-xs font-medium">
+              {currentIndex + 1} / {slides.length}
+            </span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 // --- Mobile Carousel ---
 const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -338,13 +468,18 @@ const WebsiteStats = ({ data }: { data: WebsiteData }) => (
 );
 
 export default function CaseStudiesSection() {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
   return (
-    <section id="work" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-24 overflow-hidden max-w-[100vw]">
+    <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-24 overflow-hidden max-w-[100vw]">
       
       <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[120px] sm:blur-[150px] rounded-full pointer-events-none" />
       
       {/* HEADER */}
-      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 lg:px-12 mb-12 sm:mb-14 text-center relative z-10">
+      <div className="max-w-[950px] mx-auto px-5 sm:px-8 lg:px-12 mb-12 sm:mb-14 text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-[#D1513B] animate-pulse"></span>
           <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#D1513B] uppercase">
@@ -360,7 +495,7 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* CASE STUDIES CARDS */}
-      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 lg:px-12 flex flex-col gap-6 sm:gap-8 relative z-10 w-full">
+      <div className="max-w-[950px] mx-auto px-5 sm:px-8 lg:px-12 flex flex-col gap-6 sm:gap-8 relative z-10 w-full">
         {brandsData.map((brand, index) => (
           <motion.div
             key={brand.id}
@@ -371,7 +506,7 @@ export default function CaseStudiesSection() {
             className="group relative flex flex-col lg:flex-row w-full bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-400 hover:border-[#D1513B]/20"
           >
             {/* CONTENT SECTION */}
-            <div className="w-full lg:w-[55%] p-5 sm:p-6 lg:p-7 flex flex-col bg-[#0a0a0a]">
+            <div className="w-full lg:w-[50%] p-5 sm:p-6 lg:p-7 flex flex-col bg-[#0a0a0a]">
               
               {/* Header */}
               <div className="flex items-center gap-3 mb-5">
@@ -414,7 +549,7 @@ export default function CaseStudiesSection() {
               </div>
 
               {/* Service Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5">
                 {brand.contentData && <ContentStats data={brand.contentData as ContentData} />}
                 {brand.leadsData && <LeadsStats data={brand.leadsData as LeadsData} />}
                 {brand.websiteData && <WebsiteStats data={brand.websiteData as WebsiteData} />}
@@ -434,74 +569,16 @@ export default function CaseStudiesSection() {
               </div>
             </div>
 
-            {/* IMAGES SECTION */}
-            <div className="w-full lg:w-[45%] border-t lg:border-t-0 lg:border-l border-white/[0.06] bg-[#0a0a0a]">
+            {/* IMAGES SECTION - Desktop Carousel */}
+            <div className="w-full lg:w-[50%] border-t lg:border-t-0 lg:border-l border-white/[0.06] bg-[#0a0a0a]">
               {/* Mobile Carousel */}
               <div className="lg:hidden">
                 <MobileCarousel brand={brand} />
               </div>
               
-              {/* Desktop Image Grid - All images use object-contain */}
-              <div className="hidden lg:grid grid-cols-1 h-full">
-                <div className="grid grid-cols-2 grid-rows-2 gap-px bg-white/[0.06] h-full min-h-[280px]">
-                  {brand.contentData && (
-                    <a 
-                      href={brand.contentData.instagramUrl || '#'} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="relative overflow-hidden group/img col-span-2 bg-[#0a0a0a] p-4"
-                    >
-                      <img 
-                        src={brand.contentData.image}
-                        alt="Content"
-                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-all flex items-center justify-center">
-                        <ExternalLink className="w-5 h-5 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Content & Social</span>
-                    </a>
-                  )}
-                  {brand.leadsData && (
-                    <div className="relative overflow-hidden group/img bg-[#0a0a0a] p-3">
-                      <img 
-                        src={brand.leadsData.image}
-                        alt="Leads"
-                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
-                      />
-                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Ads</span>
-                    </div>
-                  )}
-                  {brand.websiteData && (
-                    <a 
-                      href={brand.websiteData.websiteLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="relative overflow-hidden group/img bg-[#0a0a0a] p-3"
-                    >
-                      <img 
-                        src={brand.websiteData.image}
-                        alt="Website"
-                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-all flex items-center justify-center">
-                        <ExternalLink className="w-4 h-4 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
-                      </div>
-                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Website</span>
-                    </a>
-                  )}
-                  {/* Fill empty spots */}
-                  {!brand.leadsData && brand.websiteData && (
-                    <div className="bg-[#0a0a0a] flex items-center justify-center">
-                      <span className="text-gray-700 text-xs">No data</span>
-                    </div>
-                  )}
-                  {brand.leadsData && !brand.websiteData && (
-                    <div className="bg-[#0a0a0a] flex items-center justify-center">
-                      <span className="text-gray-700 text-xs">No data</span>
-                    </div>
-                  )}
-                </div>
+              {/* Desktop Carousel */}
+              <div className="hidden lg:block h-full">
+                <DesktopCarousel brand={brand} />
               </div>
             </div>
           </motion.div>
@@ -509,7 +586,7 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* FOOTER */}
-      <div className="max-w-[900px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
+      <div className="max-w-[800px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
         <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-8">
           <div className="w-10 h-10 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
             <Store className="w-5 h-5 text-[#D1513B]" />
@@ -526,7 +603,7 @@ export default function CaseStudiesSection() {
           <h3 className="text-2xl sm:text-3xl font-bold text-white mb-5">
             Ready to become our next success story?
           </h3>
-          <button className="group relative px-8 py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base hover:shadow-[0_0_25px_rgba(209,81,59,0.4)] transition-all duration-300 flex items-center gap-2">
+          <button onClick={() => scrollTo("contact")} className="group relative px-8 py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base hover:shadow-[0_0_25px_rgba(209,81,59,0.4)] transition-all duration-300 flex items-center gap-2">
             Get a Free Growth Audit
             <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
           </button>
