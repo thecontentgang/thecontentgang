@@ -9,7 +9,6 @@ import ServicesSection  from "./components/ServicesSection";
 const App = () => {
   return (
     <>
-
     <Navbar />
     <HeroSection />
     <ServicesSection />

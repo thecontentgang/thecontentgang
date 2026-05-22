@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const navLinks = ['Services', 'Projects', 'About Us', 'Contact'];
+const navLinks = ['Services', 'CaseStudies', 'About Us', 'Contact'];
 
 export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {

@@ -16,14 +16,12 @@ import {
   CreditCard,
   Target,
   Wrench,
-  Play,
   ImageIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { brandsData, type BrandCaseStudy, type ContentData, type LeadsData, type WebsiteData } from "./brandsData";
-import ReelModal from "./ReelModal";
 
-// --- Custom Instagram SVG Icon Component ---
+// --- Custom Instagram SVG Icon ---
 const InstagramIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
@@ -41,73 +39,48 @@ const InstagramIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-// --- Safe Image Component with Fallback ---
+// --- Safe Image Component (object-contain) ---
 const SafeImage = ({ 
   src, 
   fallbackSrc, 
   alt, 
   className,
-  onLoad,
-  onError 
 }: { 
   src?: string; 
   fallbackSrc?: string; 
   alt: string; 
   className?: string;
-  onLoad?: () => void;
-  onError?: () => void;
 }) => {
-  const [imgSrc, setImgSrc] = useState<string | undefined>(src);
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const currentSrc = React.useMemo(() => src, [src]);
-  
-  if (currentSrc !== imgSrc) {
-    setImgSrc(currentSrc);
-    setHasError(false);
-    setIsLoading(true);
-  }
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const handleError = () => {
-    if (!hasError) {
-      if (fallbackSrc) {
-        setImgSrc(fallbackSrc);
-        setHasError(true);
-        setIsLoading(false);
-      } else {
-        setHasError(true);
-        setIsLoading(false);
-      }
-      onError?.();
-    }
+    if (!hasError) setHasError(true);
   };
 
   const handleLoad = () => {
-    setIsLoading(false);
-    onLoad?.();
+    setIsLoaded(true);
   };
 
-  if (!imgSrc && !fallbackSrc) {
+  const displaySrc = hasError && fallbackSrc ? fallbackSrc : src;
+
+  if (!displaySrc && !fallbackSrc) {
     return (
-      <div className={`${className} bg-white/[0.03] flex items-center justify-center`}>
-        <div className="flex flex-col items-center gap-1">
-          <ImageIcon className="w-6 h-6 text-gray-600" />
-          <span className="text-gray-600 text-[10px]">No Image</span>
-        </div>
+      <div className={`${className} bg-[#0a0a0a] flex items-center justify-center`}>
+        <ImageIcon className="w-8 h-8 text-gray-700" />
       </div>
     );
   }
 
   return (
-    <div className={`relative overflow-hidden ${className || ''}`}>
-      {isLoading && (
-        <div className="absolute inset-0 bg-white/[0.03] animate-pulse" />
+    <div className={`relative overflow-hidden bg-[#0a0a0a] ${className || ''}`}>
+      {!isLoaded && !hasError && (
+        <div className="absolute inset-0 bg-[#0a0a0a] animate-pulse" />
       )}
       <img 
-        src={imgSrc || fallbackSrc} 
+        src={displaySrc || fallbackSrc} 
         alt={alt} 
-        className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
         onError={handleError}
         onLoad={handleLoad}
       />
@@ -129,7 +102,6 @@ const SafeLogo = ({
 }) => {
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
-
   const logoSrc = imgError && logoFallback ? logoFallback : logoImage;
 
   if (!logoSrc) {
@@ -141,78 +113,65 @@ const SafeLogo = ({
   }
 
   return (
-    <>
+    <div className="relative w-full h-full">
       {!imgLoaded && !imgError && (
-        <span className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 absolute">
+        <span className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 absolute inset-0 flex items-center justify-center">
           {logoText}
         </span>
       )}
       <img 
         src={logoSrc} 
         alt={`${brandName} logo`}
-        className={`w-full h-full object-contain p-1.5 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full object-contain p-1 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+        style={{ mixBlendMode: 'screen' }}
         onLoad={() => setImgLoaded(true)}
-        onError={() => {
-          if (!imgError) {
-            setImgError(true);
-          }
-        }}
+        onError={() => { if (!imgError) setImgError(true); }}
       />
       {imgError && !logoFallback && (
-        <span className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500">
+        <span className="text-lg font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-500 absolute inset-0 flex items-center justify-center">
           {logoText}
         </span>
       )}
-    </>
+    </div>
   );
 };
 
-// --- SMOOTH FRAMER MOTION CAROUSEL ---
-const PremiumCarousel = ({ 
-  brand, 
-  onReelClick 
-}: { 
-  brand: BrandCaseStudy; 
-  onReelClick?: (reelUrl: string, brandName: string, instagramHandle: string, views: string, description: string, thumbnail: string) => void;
-}) => {
+// --- Mobile Carousel ---
+const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const slides: Array<{
     id: string;
-    type: "single" | "reel";
     img: string;
     fallbackImg?: string;
     label: string;
-    reelUrl?: string;
+    linkUrl?: string;
   }> = [];
   
   if (brand.contentData) {
-    const contentData = brand.contentData as ContentData;
     slides.push({
       id: "content",
-      type: contentData.reelUrl ? "reel" : "single",
-      img: contentData.image,
-      fallbackImg: contentData.fallbackImage,
+      img: brand.contentData.image,
+      fallbackImg: brand.contentData.fallbackImage,
       label: "Content & Social",
-      reelUrl: contentData.reelUrl
+      linkUrl: brand.contentData.instagramUrl,
     });
   }
   if (brand.leadsData) {
     slides.push({
       id: "leads",
-      type: "single",
       img: brand.leadsData.image,
       fallbackImg: brand.leadsData.fallbackImage,
-      label: "Ads & Dashboard"
+      label: "Ads & Performance",
     });
   }
   if (brand.websiteData) {
     slides.push({
       id: "website",
-      type: "single",
       img: brand.websiteData.image,
       fallbackImg: brand.websiteData.fallbackImage,
-      label: "Website & Architecture"
+      label: "Website",
+      linkUrl: brand.websiteData.websiteLink,
     });
   }
 
@@ -220,101 +179,72 @@ const PremiumCarousel = ({
     if (slides.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    }, 3500);
     return () => clearInterval(timer);
   }, [slides.length]);
-
-  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
 
   if (slides.length === 0) return null;
 
   const currentSlide = slides[currentIndex];
 
   return (
-    <div className="relative w-full h-[250px] sm:h-[280px] lg:h-full lg:absolute lg:inset-0 bg-[#050505] overflow-hidden group">
+    <div className="relative w-full aspect-[16/9] bg-[#0a0a0a] overflow-hidden group">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 w-full h-full"
+          transition={{ duration: 0.3 }}
+          className="absolute inset-0 bg-[#0a0a0a]"
         >
-          {currentSlide.type === "reel" ? (
-            <div className="w-full h-full p-1.5">
-              <div 
-                className="w-full h-full rounded-[1.25rem] overflow-hidden relative cursor-pointer group/reel"
-                onClick={() => {
-                  if (currentSlide.reelUrl && onReelClick && brand.contentData) {
-                    const cd = brand.contentData as ContentData;
-                    onReelClick(
-                      currentSlide.reelUrl,
-                      brand.brandName,
-                      cd.instagramHandle,
-                      cd.views,
-                      cd.description,
-                      currentSlide.img
-                    );
-                  }
-                }}
-              >
-                <SafeImage 
-                  src={currentSlide.img} 
-                  fallbackSrc={currentSlide.fallbackImg}
-                  alt="Reel" 
-                  className="w-full h-full group-hover/reel:scale-105 transition-transform duration-500" 
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/reel:bg-black/40 transition-all">
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center group-hover/reel:scale-110 transition-transform">
-                    <Play className="w-6 h-6 sm:w-7 sm:h-7 text-white ml-1" />
-                  </div>
-                </div>
+          <div 
+            className="w-full h-full cursor-pointer"
+            onClick={() => {
+              if (currentSlide.linkUrl) {
+                window.open(currentSlide.linkUrl, '_blank');
+              }
+            }}
+          >
+            <SafeImage 
+              src={currentSlide.img} 
+              fallbackSrc={currentSlide.fallbackImg}
+              alt={currentSlide.label} 
+              className="w-full h-full" 
+            />
+            {currentSlide.linkUrl && (
+              <div className="absolute top-3 right-3 bg-black/50 backdrop-blur-md rounded-full p-1.5">
+                <ExternalLink className="w-3.5 h-3.5 text-white" />
               </div>
+            )}
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+              <span className="text-white text-sm font-medium">{currentSlide.label}</span>
             </div>
-          ) : (
-            <div className="w-full h-full p-1.5">
-              <div className="w-full h-full rounded-[1.25rem] overflow-hidden relative">
-                <SafeImage 
-                  src={currentSlide.img} 
-                  fallbackSrc={currentSlide.fallbackImg}
-                  alt={currentSlide.label} 
-                  className="w-full h-full" 
-                />
-              </div>
-            </div>
-          )}
+          </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Floating Label */}
-      <div className="absolute top-4 right-4 z-20">
-        <div className="px-2 sm:px-3 py-1 sm:py-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-full">
-          <span className="text-[9px] sm:text-[10px] font-semibold text-white uppercase tracking-wider">
-            {currentSlide.label}
-          </span>
-        </div>
-      </div>
-
       {slides.length > 1 && (
         <>
-          <div className="absolute bottom-4 right-4 z-20 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button onClick={prevSlide} className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#D1513B]/80 hover:border-transparent transition-all">
-              <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-            </button>
-            <button onClick={nextSlide} className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-[#D1513B]/80 hover:border-transparent transition-all">
-              <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
-            </button>
-          </div>
-
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-1.5">
+          <button 
+            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length); }}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <ChevronLeft className="w-4 h-4 text-white" />
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); setCurrentIndex((prev) => (prev + 1) % slides.length); }}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <ChevronRight className="w-4 h-4 text-white" />
+          </button>
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
             {slides.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                className={`h-1 rounded-full transition-all duration-500 ${
-                  currentIndex === idx ? "w-5 sm:w-6 bg-white" : "w-1.5 bg-white/30"
+                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                className={`h-1 rounded-full transition-all ${
+                  currentIndex === idx ? "w-5 bg-white" : "w-1.5 bg-white/40"
                 }`}
               />
             ))}
@@ -325,182 +255,127 @@ const PremiumCarousel = ({
   );
 };
 
-// --- Service Detail Card Component ---
-const ServiceDetailCard = ({ 
+// --- Stat Badge ---
+const StatBadge = ({ 
   icon: Icon, 
-  title, 
-  children 
+  value, 
+  label,
+  colorClass = "text-[#D1513B]"
 }: { 
   icon: React.ComponentType<{ className?: string }>; 
-  title: string; 
-  children: React.ReactNode 
+  value: string; 
+  label: string;
+  colorClass?: string;
 }) => (
-  <div className="flex gap-2 sm:gap-3 group/line">
-    <div className="mt-0.5 shrink-0">
-      <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-gray-500 group-hover/line:text-[#D1513B] transition-colors" />
+  <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06]">
+    <Icon className={`w-3.5 h-3.5 ${colorClass}`} />
+    <span className="text-white font-bold text-sm">{value}</span>
+    <span className="text-gray-500 text-xs">{label}</span>
+  </div>
+);
+
+// --- Content Stats ---
+const ContentStats = ({ data }: { data: ContentData }) => (
+  <div className="space-y-2.5">
+    <div className="flex items-center gap-2">
+      <InstagramIcon className="w-4 h-4 text-[#D1513B]" />
+      <h4 className="text-white font-semibold text-sm">Content & Social Media</h4>
     </div>
-    <div className="min-w-0">
-      <h4 className="text-white font-semibold text-[10px] sm:text-xs mb-0.5">{title}</h4>
-      <div className="text-gray-400 text-[10px] sm:text-xs leading-relaxed">
-        {children}
-      </div>
+    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
+    <div className="flex flex-wrap gap-2">
+      <StatBadge icon={Users} value={data.followersGained} label="Followers" />
+      <StatBadge icon={Eye} value={data.views} label="Views" />
+    </div>
+    {data.instagramUrl && (
+      <a href={data.instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#D1513B] hover:text-[#e38777] transition-colors font-medium">
+        <InstagramIcon className="w-3.5 h-3.5" />
+        View Profile
+      </a>
+    )}
+  </div>
+);
+
+// --- Leads Stats ---
+const LeadsStats = ({ data }: { data: LeadsData }) => (
+  <div className="space-y-2.5">
+    <div className="flex items-center gap-2">
+      <LineChart className="w-4 h-4 text-[#D1513B]" />
+      <h4 className="text-white font-semibold text-sm">Performance Marketing</h4>
+    </div>
+    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
+    <div className="grid grid-cols-2 gap-2">
+      <StatBadge icon={Target} value={data.leadsGenerated} label="Leads" />
+      <StatBadge icon={TrendingUp} value={data.converted} label="Converted" colorClass="text-emerald-400" />
+      <StatBadge icon={Calendar} value={`${data.months}m`} label="Duration" />
+      <StatBadge icon={CreditCard} value={data.revenue} label="Revenue" colorClass="text-emerald-400" />
     </div>
   </div>
 );
 
-// --- Content Stats Component ---
-const ContentStats = ({ data }: { data: ContentData }) => (
-  <ServiceDetailCard icon={InstagramIcon} title="Content & Social Media">
-    <p className="mb-2">{data.description}</p>
-    <div className="flex flex-wrap gap-1.5">
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <Users className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#D1513B]" />
-        <span className="text-white font-bold text-[10px] sm:text-xs">{data.followersGained}</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Followers</span>
-      </div>
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <Eye className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#D1513B]" />
-        <span className="text-white font-bold text-[10px] sm:text-xs">{data.views}</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Views</span>
-      </div>
-    </div>
-  </ServiceDetailCard>
-);
-
-// --- Leads Stats Component ---
-const LeadsStats = ({ data }: { data: LeadsData }) => (
-  <ServiceDetailCard icon={LineChart} title="Performance Marketing">
-    <p className="mb-2">{data.description}</p>
-    <div className="grid grid-cols-2 gap-1.5">
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <Target className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#D1513B]" />
-        <span className="text-white font-bold text-[10px] sm:text-xs">{data.leadsGenerated}</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Leads</span>
-      </div>
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
-        <span className="text-emerald-400 font-bold text-[10px] sm:text-xs">{data.converted}</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Converted</span>
-      </div>
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#D1513B]" />
-        <span className="text-white font-bold text-[10px] sm:text-xs">{data.months}m</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Duration</span>
-      </div>
-      <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md bg-white/[0.03] border border-white/5">
-        <CreditCard className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-400" />
-        <span className="text-emerald-400 font-bold text-[10px] sm:text-xs">{data.revenue}</span>
-        <span className="text-gray-500 text-[8px] sm:text-[10px]">Revenue</span>
-      </div>
-    </div>
-  </ServiceDetailCard>
-);
-
-// --- Website Stats Component ---
+// --- Website Stats ---
 const WebsiteStats = ({ data }: { data: WebsiteData }) => (
-  <ServiceDetailCard icon={LayoutTemplate} title="Website Development">
-    <p className="mb-2">{data.description}</p>
+  <div className="space-y-2.5">
+    <div className="flex items-center gap-2">
+      <LayoutTemplate className="w-4 h-4 text-[#D1513B]" />
+      <h4 className="text-white font-semibold text-sm">Website Development</h4>
+    </div>
+    <p className="text-gray-400 text-sm leading-relaxed">{data.description}</p>
     <div className="flex flex-wrap gap-1.5">
       {data.features.map((feature, idx) => (
-        <span
-          key={idx}
-          className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white/[0.03] border border-white/10 rounded-full text-[8px] sm:text-[10px] font-medium text-gray-300"
-        >
-          <Wrench className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#D1513B]" />
+        <span key={idx} className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-full text-xs font-medium text-gray-300">
+          <Wrench className="w-3 h-3 text-[#D1513B]" />
           {feature}
         </span>
       ))}
     </div>
     {data.websiteLink && (
-      <a
-        href={data.websiteLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 mt-2 text-[9px] sm:text-[10px] text-[#D1513B] hover:text-[#e38777] transition-colors"
-      >
-        <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+      <a href={data.websiteLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs text-[#D1513B] hover:text-[#e38777] transition-colors font-medium">
+        <ExternalLink className="w-3.5 h-3.5" />
         Visit Website
       </a>
     )}
-  </ServiceDetailCard>
+  </div>
 );
 
 export default function CaseStudiesSection() {
-  const [reelModal, setReelModal] = useState<{
-    isOpen: boolean;
-    videoUrl: string;
-    thumbnail: string;
-    brandName: string;
-    instagramHandle: string;
-    views: string;
-    description: string;
-  }>({
-    isOpen: false,
-    videoUrl: '',
-    thumbnail: '',
-    brandName: '',
-    instagramHandle: '',
-    views: '',
-    description: ''
-  });
-
-  const handleReelClick = (
-    reelUrl: string,
-    brandName: string,
-    instagramHandle: string,
-    views: string,
-    description: string,
-    thumbnail: string
-  ) => {
-    setReelModal({
-      isOpen: true,
-      videoUrl: reelUrl,
-      thumbnail,
-      brandName,
-      instagramHandle,
-      views,
-      description
-    });
-  };
-
-  const closeReelModal = () => {
-    setReelModal(prev => ({ ...prev, isOpen: false }));
-  };
-
   return (
-    <section id="work" className="relative w-full bg-[#050505] text-white py-12 sm:py-16 lg:py-24 overflow-hidden max-w-[100vw]">
+    <section id="work" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-24 overflow-hidden max-w-[100vw]">
       
-      <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] lg:w-[800px] h-[300px] sm:h-[500px] lg:h-[800px] bg-[#D1513B]/5 blur-[80px] sm:blur-[120px] lg:blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[120px] sm:blur-[150px] rounded-full pointer-events-none" />
       
       {/* HEADER */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 mb-8 sm:mb-12 lg:mb-16 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 mb-4 sm:mb-5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
-          <span className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-[#D1513B] animate-pulse"></span>
-          <span className="text-[10px] sm:text-xs font-semibold tracking-widest text-[#D1513B] uppercase">
+      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 lg:px-12 mb-12 sm:mb-14 text-center relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#D1513B] animate-pulse"></span>
+          <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#D1513B] uppercase">
             Client Success Stories
           </span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-3 sm:mb-4">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-4">
           Growth that <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] to-[#e38777]">speaks.</span>
         </h2>
-        <p className="text-gray-400 text-sm sm:text-base max-w-xl mx-auto font-light leading-relaxed">
+        <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto font-light">
           We engineer complete digital ecosystems designed to dominate your market.
         </p>
       </div>
 
       {/* CASE STUDIES CARDS */}
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 flex flex-col gap-6 sm:gap-8 lg:gap-12 relative z-10 w-full">
-        {brandsData.map((brand) => (
-          <div
+      <div className="max-w-[1100px] mx-auto px-5 sm:px-8 lg:px-12 flex flex-col gap-6 sm:gap-8 relative z-10 w-full">
+        {brandsData.map((brand, index) => (
+          <motion.div
             key={brand.id}
-            className="group relative flex flex-col lg:flex-row w-full bg-[#0a0a0a] border border-white/10 rounded-2xl sm:rounded-[2rem] overflow-hidden transition-all duration-500 hover:border-[#D1513B]/30 hover:shadow-[0_0_60px_rgba(209,81,59,0.05)]"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-20px" }}
+            transition={{ duration: 0.4, delay: index * 0.08 }}
+            className="group relative flex flex-col lg:flex-row w-full bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-400 hover:border-[#D1513B]/20"
           >
-            {/* LEFT PANE */}
-            <div className="w-full lg:w-[45%] p-4 sm:p-6 lg:p-8 flex flex-col justify-between relative z-10 border-b lg:border-b-0 lg:border-r border-white/5 bg-[#0a0a0a]">
+            {/* CONTENT SECTION */}
+            <div className="w-full lg:w-[55%] p-5 sm:p-6 lg:p-7 flex flex-col bg-[#0a0a0a]">
               
-              {/* Top Row: Logo & Brand Name */}
-              <div className="flex items-center justify-between mb-4 sm:mb-5">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-[#1a1a1a] to-[#050505] border border-white/10 flex items-center justify-center shadow-xl shrink-0 overflow-hidden relative">
+              {/* Header */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-transparent flex items-center justify-center shrink-0 overflow-hidden relative border border-white/[0.06]">
                   <SafeLogo 
                     logoImage={brand.logoImage}
                     logoFallback={brand.logoFallback}
@@ -508,8 +383,8 @@ export default function CaseStudiesSection() {
                     brandName={brand.brandName}
                   />
                 </div>
-                <div className="text-right ml-3 sm:ml-4">
-                  <h3 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight truncate">
                     {brand.brandName}
                   </h3>
                   {(brand.contentData as ContentData)?.instagramHandle && (
@@ -517,89 +392,143 @@ export default function CaseStudiesSection() {
                       href={`https://instagram.com/${(brand.contentData as ContentData).instagramHandle.replace('@', '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mt-1 text-[10px] sm:text-xs text-gray-400 hover:text-[#D1513B] transition-colors duration-300 group/ig"
+                      className="inline-flex items-center gap-1 mt-0.5 text-xs text-gray-400 hover:text-[#D1513B] transition-colors"
                     >
-                      <InstagramIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 group-hover/ig:scale-110 transition-transform" />
+                      <InstagramIcon className="w-3 h-3" />
                       <span>{(brand.contentData as ContentData).instagramHandle}</span>
                     </a>
                   )}
                 </div>
+                {/* Service Pills */}
+                <div className="hidden sm:flex gap-1.5 shrink-0">
+                  {brand.services.includes("content") && (
+                    <span className="px-2.5 py-1 bg-[#D1513B]/10 border border-[#D1513B]/20 rounded-md text-[10px] font-semibold text-[#e38777]">Content</span>
+                  )}
+                  {brand.services.includes("leads") && (
+                    <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-[10px] font-semibold text-emerald-400">Leads</span>
+                  )}
+                  {brand.services.includes("website") && (
+                    <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-semibold text-blue-400">Web</span>
+                  )}
+                </div>
               </div>
 
-              {/* Middle: Service Details */}
-              <div className="space-y-2 sm:space-y-3 lg:space-y-4 flex-1">
-                {brand.contentData && (
-                  <ContentStats data={brand.contentData as ContentData} />
-                )}
-                {brand.leadsData && (
-                  <LeadsStats data={brand.leadsData as LeadsData} />
-                )}
-                {brand.websiteData && (
-                  <WebsiteStats data={brand.websiteData as WebsiteData} />
-                )}
+              {/* Service Details */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+                {brand.contentData && <ContentStats data={brand.contentData as ContentData} />}
+                {brand.leadsData && <LeadsStats data={brand.leadsData as LeadsData} />}
+                {brand.websiteData && <WebsiteStats data={brand.websiteData as WebsiteData} />}
               </div>
 
-              {/* Bottom: Service Pills */}
-              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/5">
+              {/* Mobile Service Pills */}
+              <div className="flex sm:hidden gap-1.5 mt-4 pt-4 border-t border-white/[0.06]">
                 {brand.services.includes("content") && (
-                  <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/[0.03] border border-white/10 rounded-md text-[8px] sm:text-[10px] font-semibold text-gray-300">
-                    Content Marketing
-                  </div>
+                  <span className="px-2.5 py-1 bg-[#D1513B]/10 border border-[#D1513B]/20 rounded-md text-[10px] font-semibold text-[#e38777]">Content</span>
                 )}
                 {brand.services.includes("leads") && (
-                  <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/[0.03] border border-white/10 rounded-md text-[8px] sm:text-[10px] font-semibold text-gray-300">
-                    Lead Generation
-                  </div>
+                  <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-[10px] font-semibold text-emerald-400">Leads</span>
                 )}
                 {brand.services.includes("website") && (
-                  <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/[0.03] border border-white/10 rounded-md text-[8px] sm:text-[10px] font-semibold text-gray-300">
-                    Website Development
-                  </div>
+                  <span className="px-2.5 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-[10px] font-semibold text-blue-400">Web</span>
                 )}
               </div>
             </div>
 
-            {/* RIGHT PANE: Carousel */}
-            <div className="w-full lg:w-[55%] relative h-[250px] sm:h-[280px] lg:h-auto lg:min-h-[320px]">
-              <PremiumCarousel brand={brand} onReelClick={handleReelClick} />
+            {/* IMAGES SECTION */}
+            <div className="w-full lg:w-[45%] border-t lg:border-t-0 lg:border-l border-white/[0.06] bg-[#0a0a0a]">
+              {/* Mobile Carousel */}
+              <div className="lg:hidden">
+                <MobileCarousel brand={brand} />
+              </div>
+              
+              {/* Desktop Image Grid - All images use object-contain */}
+              <div className="hidden lg:grid grid-cols-1 h-full">
+                <div className="grid grid-cols-2 grid-rows-2 gap-px bg-white/[0.06] h-full min-h-[280px]">
+                  {brand.contentData && (
+                    <a 
+                      href={brand.contentData.instagramUrl || '#'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="relative overflow-hidden group/img col-span-2 bg-[#0a0a0a] p-4"
+                    >
+                      <img 
+                        src={brand.contentData.image}
+                        alt="Content"
+                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-all flex items-center justify-center">
+                        <ExternalLink className="w-5 h-5 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                      </div>
+                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Content & Social</span>
+                    </a>
+                  )}
+                  {brand.leadsData && (
+                    <div className="relative overflow-hidden group/img bg-[#0a0a0a] p-3">
+                      <img 
+                        src={brand.leadsData.image}
+                        alt="Leads"
+                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
+                      />
+                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Ads</span>
+                    </div>
+                  )}
+                  {brand.websiteData && (
+                    <a 
+                      href={brand.websiteData.websiteLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="relative overflow-hidden group/img bg-[#0a0a0a] p-3"
+                    >
+                      <img 
+                        src={brand.websiteData.image}
+                        alt="Website"
+                        className="w-full h-full object-contain group-hover/img:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover/img:bg-black/10 transition-all flex items-center justify-center">
+                        <ExternalLink className="w-4 h-4 text-white opacity-0 group-hover/img:opacity-100 transition-opacity" />
+                      </div>
+                      <span className="absolute bottom-2 left-2 text-white text-xs font-medium bg-black/50 px-2 py-0.5 rounded-full">Website</span>
+                    </a>
+                  )}
+                  {/* Fill empty spots */}
+                  {!brand.leadsData && brand.websiteData && (
+                    <div className="bg-[#0a0a0a] flex items-center justify-center">
+                      <span className="text-gray-700 text-xs">No data</span>
+                    </div>
+                  )}
+                  {brand.leadsData && !brand.websiteData && (
+                    <div className="bg-[#0a0a0a] flex items-center justify-center">
+                      <span className="text-gray-700 text-xs">No data</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
 
-      {/* Reel Modal */}
-      <ReelModal
-        isOpen={reelModal.isOpen}
-        onClose={closeReelModal}
-        videoUrl={reelModal.videoUrl}
-        thumbnail={reelModal.thumbnail}
-        brandName={reelModal.brandName}
-        instagramHandle={reelModal.instagramHandle}
-        views={reelModal.views}
-        description={reelModal.description}
-      />
-
-      {/* FOOTER NOTE & CTA */}
-      <div className="max-w-[1000px] mx-auto px-4 sm:px-6 mt-12 sm:mt-16 lg:mt-20 relative z-10">
-        <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-[2rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 justify-center text-center sm:text-left mb-8 sm:mb-12">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
-            <Store className="w-5 h-5 sm:w-6 sm:h-6 text-[#D1513B]" />
+      {/* FOOTER */}
+      <div className="max-w-[900px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
+        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-8">
+          <div className="w-10 h-10 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
+            <Store className="w-5 h-5 text-[#D1513B]" />
           </div>
           <div>
-            <h4 className="text-white font-bold text-base sm:text-lg mb-1">And many more industries...</h4>
-            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+            <h4 className="text-white font-bold text-base mb-1">And many more industries...</h4>
+            <p className="text-gray-400 text-sm leading-relaxed">
               We provide tailored digital solutions for all types of businesses including <strong className="text-gray-200">Shopping Malls, Home Theaters, Jewellery Shops, and Skincare Brands</strong>.
             </p>
           </div>
         </div>
 
         <div className="flex flex-col items-center justify-center text-center">
-          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6">
+          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-5">
             Ready to become our next success story?
           </h3>
-          <button className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-sm sm:text-base hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 flex items-center gap-2">
+          <button className="group relative px-8 py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base hover:shadow-[0_0_25px_rgba(209,81,59,0.4)] transition-all duration-300 flex items-center gap-2">
             Get a Free Growth Audit
-            <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+            <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </div>

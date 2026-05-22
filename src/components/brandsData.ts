@@ -24,7 +24,7 @@ export interface ContentData extends ServiceDetails {
   instagramHandle: string;
   followersGained: string;
   views: string;
-  reelUrl?: string;
+  instagramUrl?: string; // Instagram profile URL for redirection
 }
 
 export interface LeadsData extends ServiceDetails {
@@ -77,9 +77,9 @@ const imagePaths = {
     krimmy: "/brands/content/krimmy-content.jpg",
   },
   leads: {
-    zencraft: "/assets/zencraft/zencraft-leads.jpg",
+    zencraft: "/assets/zencraft/zenads.png",
     tvam: "/assets/tvam/tvam-leads.jpg",
-    handover: "/brands/leads/handover-leads.jpg",
+    handover: "/assets/zencraft/handoverads.png",
   },
   website: {
     zencraft: "/assets/zencraft/zenweb.png",
@@ -89,11 +89,19 @@ const imagePaths = {
     tvam: "/assets/tvam/tvamweb.png",
     handover: "/brands/website/handover-website.jpg",
   },
-  reels: {
-    zencraft: "/assets/zencraft/zencraft-reel.mp4",
-    illusion: "/assets/illusion/illusion-reel.mp4",
-    jilamall: "/brands/reels/jilamall-reel.mp4",
-  }
+};
+
+// ============================================
+// INSTAGRAM URLS
+// ============================================
+const instagramUrls = {
+  zencraft: "https://www.instagram.com/thezencraftinteriors/",
+  vogue: "https://www.instagram.com/vogue.designstudio/",
+  illusion: "https://www.instagram.com/illusion_interiors/",
+  brightArena: "https://www.instagram.com/brightarena/",
+  handover: "https://www.instagram.com/handoverexperts/",
+  jilamall: "https://www.instagram.com/jilamallsweets/",
+  krimmy: "https://www.instagram.com/krimmythickshake/",
 };
 
 // ============================================
@@ -101,10 +109,6 @@ const imagePaths = {
 // ============================================
 const getImagePath = (path: string): string => {
   return path;
-};
-
-const getVideoPath = (path: string): string | undefined => {
-  return path || "https://www.w3schools.com/html/mov_bbb.mp4";
 };
 
 // ============================================
@@ -125,7 +129,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@thezencraftinteriors",
       followersGained: "+65K",
       views: "3.7M",
-      reelUrl: getVideoPath(imagePaths.reels.zencraft),
+      instagramUrl: instagramUrls.zencraft,
     },
     leadsData: {
       image: getImagePath(imagePaths.leads.zencraft),
@@ -163,6 +167,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@vogue.designstudio",
       followersGained: "+23K",
       views: "1.1M",
+      instagramUrl: instagramUrls.vogue,
     },
     websiteData: {
       image: getImagePath(imagePaths.website.vogue),
@@ -191,7 +196,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@illusion_interiors",
       followersGained: "+62K",
       views: "7.4M",
-      reelUrl: getVideoPath(imagePaths.reels.illusion),
+      instagramUrl: instagramUrls.illusion,
     },
     websiteData: {
       image: getImagePath(imagePaths.website.illusion),
@@ -220,6 +225,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@brightarena",
       followersGained: "+40K",
       views: "5.1M",
+      instagramUrl: instagramUrls.brightArena,
     },
     websiteData: {
       image: getImagePath(imagePaths.website.brightArena),
@@ -277,6 +283,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@handoverexperts",
       followersGained: "+57K",
       views: "6.5M",
+      instagramUrl: instagramUrls.handover,
     },
     leadsData: {
       image: getImagePath(imagePaths.leads.handover),
@@ -314,7 +321,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@jilamallsweets",
       followersGained: "+18K",
       views: "2.4M",
-      reelUrl: getVideoPath(imagePaths.reels.jilamall),
+      instagramUrl: instagramUrls.jilamall,
     },
   },
   {
@@ -331,6 +338,7 @@ export const brandsData: BrandCaseStudy[] = [
       instagramHandle: "@krimmythickshake",
       followersGained: "+38K",
       views: "4.2M",
+      instagramUrl: instagramUrls.krimmy,
     },
   },
 ];
