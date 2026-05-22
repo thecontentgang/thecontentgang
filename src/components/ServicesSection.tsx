@@ -146,8 +146,8 @@ export default function ServicesSection() {
       </h2>
 
       <p className="text-gray-400 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed max-w-sm sm:max-w-md font-light">
-        From viral content and performance marketing to stunning websites and lead generation — we create digital experiences that drive attention, trust, and real business growth.
-      </p>
+  We create content, run ads, build websites, and generate leads — everything you need to grow your brand and drive real revenue.
+</p>
     </>
   );
 
@@ -159,13 +159,10 @@ export default function ServicesSection() {
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Brands Scaled</p>
         </div>
         <div>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">₹8.5Cr+</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold text-white">₹12.5Cr+</h3>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Revenue Generated</p>
         </div>
-        <div>
-          <h3 className="text-2xl sm:text-3xl font-bold text-white">70K+</h3>
-          <p className="text-xs sm:text-sm text-gray-500 mt-1">Followers Grown</p>
-        </div>
+        
       </div>
 
       <button onClick={() => scrollTo("contact")} className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group">
@@ -179,7 +176,7 @@ export default function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="relative w-full py-10 lg:py-20 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden max-w-[100vw]"
+      className="relative w-full py-10 lg:py-24 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden max-w-[100vw]"
     >
       <style>{`
         .no-scrollbar::-webkit-scrollbar {

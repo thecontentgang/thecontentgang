@@ -51,7 +51,7 @@ export default function HeroSection() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center mt-10 sm:mt-0 max-w-full"
+        className="relative z-20 w-full px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center max-w-full"
       >
         
         {/* Top Badge */}
@@ -63,7 +63,7 @@ export default function HeroSection() {
           <span>Strategic Content & Digital Growth</span>
         </motion.div>
 
-        {/* HEADING - Large on mobile, moderate on desktop */}
+        {/* HEADING */}
         <motion.h1 
           variants={itemVariants} 
           className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-5 sm:mb-6 max-w-5xl text-white flex flex-col items-center justify-center w-full"
@@ -90,31 +90,33 @@ export default function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* SUBTEXT - Clean and readable */}
-        <motion.p
-          variants={itemVariants}
-          className="mt-2 text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl md:max-w-3xl mb-8 sm:mb-10 font-light leading-relaxed px-2"
-        >
-          We help brands scale through strategic{" "}
-          <strong className="font-semibold text-gray-200">Content</strong>
-          , performance-driven{" "}
-          <strong className="font-semibold text-gray-200">Marketing</strong>
-          , high-converting{" "}
-          <strong className="font-semibold text-gray-200">Lead Generation</strong>
-          , and impactful{" "}
-          <strong className="font-semibold text-gray-200">Digital Experiences</strong>
-          . In the last{" "}
-          <strong className="font-semibold text-gray-200">90 days</strong>
-          , we've generated over{" "}
-          <strong className="font-semibold text-[#e38777]">28M+ views</strong>
-          , delivered{" "}
-          <strong className="font-semibold text-[#e38777]">10,000+ leads</strong>
-          , generated{" "}
-          <strong className="font-semibold text-[#e38777]">₹12.5Cr+ revenue</strong>
-          for clients, and partnered with{" "}
-          <strong className="font-semibold text-gray-200">50+ growing brands</strong>
-          .
-        </motion.p>
+        {/* SUBTEXT - Fixed width */}
+        <div className="w-full flex justify-center">
+          <motion.p
+            variants={itemVariants}
+            className="mt-2 text-sm sm:text-base md:text-lg text-gray-400 w-full max-w-[500px] sm:max-w-[550px] mb-8 sm:mb-10 font-light leading-relaxed px-2"
+          >
+            We help brands scale through strategic{" "}
+            <strong className="font-semibold text-gray-200">Content</strong>
+            , performance-driven{" "}
+            <strong className="font-semibold text-gray-200">Marketing</strong>
+            , high-converting{" "}
+            <strong className="font-semibold text-gray-200">Lead Generation</strong>
+            , and impactful{" "}
+            <strong className="font-semibold text-gray-200">Digital Experiences</strong>
+            . In the last{" "}
+            <strong className="font-semibold text-gray-200">90 days</strong>
+            , we've generated over{" "}
+            <strong className="font-semibold text-[#e38777]">28M+ views</strong>
+            , delivered{" "}
+            <strong className="font-semibold text-[#e38777]">10,000+ leads</strong>
+            , generated{" "}
+            <strong className="font-semibold text-[#e38777]">₹12.5Cr+ revenue</strong>
+            for clients, and partnered with{" "}
+            <strong className="font-semibold text-gray-200">50+ growing brands</strong>
+            .
+          </motion.p>
+        </div>
 
         {/* BUTTONS */}
         <motion.div 
