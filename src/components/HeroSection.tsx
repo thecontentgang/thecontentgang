@@ -39,7 +39,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
+      className="relative w-full min-h-[100dvh] pt-20 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
     >
       {/* === PREMIUM BACKGROUND === */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -57,24 +57,24 @@ export default function HeroSection() {
         {/* Top Badge */}
         <motion.div 
           variants={itemVariants} 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm sm:text-base font-medium text-gray-300 backdrop-blur-md mb-8 sm:mb-10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-gray-300 backdrop-blur-md mb-6 sm:mb-8"
         >
-          <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#D1513B]" />
+          <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D1513B]" />
           <span>Strategic Content & Digital Growth</span>
         </motion.div>
 
-        {/* HEADING - Much larger on mobile */}
+        {/* HEADING - Large on mobile, moderate on desktop */}
         <motion.h1 
           variants={itemVariants} 
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-6 sm:mb-8 max-w-6xl text-white flex flex-col items-center justify-center w-full"
+          className="text-5xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-5 sm:mb-6 max-w-5xl text-white flex flex-col items-center justify-center w-full"
         >
           <span className="block">Content that</span> 
           
           {/* ROTATING TEXT */}
-          <span className="relative flex justify-center mt-2 sm:mt-0 sm:inline-flex sm:ml-4 text-center sm:text-left min-w-[300px] sm:min-w-[auto]">
+          <span className="relative flex justify-center mt-2 sm:mt-1 sm:inline-flex sm:ml-3 text-center sm:text-left min-w-[280px] sm:min-w-[auto]">
             <RotatingText
               texts={["connects.", "inspires.", "converts.", "scales brands."]}
-              mainClassName="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] via-[#e38777] to-[#ffc5bc] overflow-hidden py-2 sm:py-3"
+              mainClassName="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] via-[#e38777] to-[#ffc5bc] overflow-hidden py-1.5 sm:py-2"
               splitLevelClassName="overflow-hidden pb-1"
               staggerFrom="last"
               initial={{ y: "100%" }}
@@ -90,10 +90,10 @@ export default function HeroSection() {
           </span>
         </motion.h1>
 
-        {/* SUBTEXT - Better mobile readability */}
+        {/* SUBTEXT - Clean and readable */}
         <motion.p
           variants={itemVariants}
-          className="mt-2 text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mb-10 sm:mb-12 font-light leading-relaxed px-2"
+          className="mt-2 text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl md:max-w-3xl mb-8 sm:mb-10 font-light leading-relaxed px-2"
         >
           We help brands scale through strategic{" "}
           <strong className="font-semibold text-gray-200">Content</strong>
@@ -119,19 +119,19 @@ export default function HeroSection() {
         {/* BUTTONS */}
         <motion.div 
           variants={itemVariants} 
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto z-30 px-4 sm:px-0"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto z-30 px-4 sm:px-0"
         >
           <button
             onClick={() => scrollTo("contact")}
-            className="group w-full sm:w-auto px-10 py-4 sm:py-4.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg shadow-[0_0_30px_rgba(209,81,59,0.3)] hover:shadow-[0_0_40px_rgba(209,81,59,0.6)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
+            className="group w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-sm sm:text-base shadow-[0_0_25px_rgba(209,81,59,0.3)] hover:shadow-[0_0_35px_rgba(209,81,59,0.6)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
           >
             Start Your Project
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-300" />
           </button>
 
           <button
             onClick={() => scrollTo("services")}
-            className="w-full sm:w-auto px-10 py-4 sm:py-4.5 bg-[#ffffff08] border border-white/10 text-gray-200 rounded-full font-bold text-base sm:text-lg hover:bg-white/10 hover:text-white transition-all duration-300 backdrop-blur-md"
+            className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-[#ffffff08] border border-white/10 text-gray-200 rounded-full font-bold text-sm sm:text-base hover:bg-white/10 hover:text-white transition-all duration-300 backdrop-blur-md"
           >
             Explore Services
           </button>
@@ -140,9 +140,9 @@ export default function HeroSection() {
         {/* Scroll Indicator */}
         <motion.div 
           variants={itemVariants}
-          className="mt-16 sm:mt-20 flex flex-col items-center gap-2"
+          className="mt-12 sm:mt-16 flex flex-col items-center gap-2"
         >
-          <span className="text-xs text-gray-500 uppercase tracking-widest">Scroll to explore</span>
+          <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest">Scroll to explore</span>
           <div className="w-5 h-8 rounded-full border border-white/10 flex items-start justify-center p-1">
             <motion.div 
               animate={{ y: [0, 10, 0] }}
