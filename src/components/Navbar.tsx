@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -8,11 +8,24 @@ export default function Navbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    // Cleanup function to restore scroll when component unmounts
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <>
-      {/* Increased px (padding left/right) across different screen sizes for breathing room */}
-      <nav className="fixed top-0 inset-x-0 z-50 px-6 sm:px-10 md:px-16 lg:px-24 py-6">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+      <nav className="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 py-4 md:py-6 max-w-[100vw]">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between w-full">
           
           {/* Left: Logo (Outside Pill) */}
           <div className="flex-1 flex items-center justify-start">
@@ -20,7 +33,7 @@ export default function Navbar() {
               <img 
                 src="/Content-LOGO.png" 
                 alt="TheContentGang Logo" 
-                className="h-10 md:h-24 w-auto object-contain"
+                className="h-8 sm:h-10 md:h-16 lg:h-24 w-auto object-contain"
               />
             </a>
           </div>
@@ -33,7 +46,7 @@ export default function Navbar() {
                 href={`#${item.toLowerCase().replace(' ', '-')}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="relative px-6 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:text-white"
+                className="relative px-4 lg:px-6 py-2 lg:py-2.5 text-xs lg:text-sm font-medium text-gray-300 transition-colors hover:text-white"
               >
                 {/* Framer Motion sliding hover effect */}
                 {hoveredIndex === index && (
@@ -52,15 +65,16 @@ export default function Navbar() {
           </div>
 
           {/* Right: CTA Button (Outside Pill) */}
-          <div className="flex-1 flex items-center justify-end gap-4">
-            <button className="hidden md:block px-7 py-3 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white text-sm font-bold rounded-full hover:shadow-[0_0_20px_rgba(209,81,59,0.5)] hover:-translate-y-0.5 transition-all duration-300">
+          <div className="flex-1 flex items-center justify-end gap-2 sm:gap-4">
+            <button className="hidden md:block px-5 lg:px-7 py-2.5 lg:py-3 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white text-xs lg:text-sm font-bold rounded-full hover:shadow-[0_0_20px_rgba(209,81,59,0.5)] hover:-translate-y-0.5 transition-all duration-300">
               Start Project
             </button>
 
             {/* Mobile Menu Toggle (Glassmorphism style) */}
             <button 
-              className="md:hidden p-2.5 text-gray-300 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-colors"
+              className="md:hidden p-2 sm:p-2.5 text-gray-300 hover:text-white bg-white/5 backdrop-blur-xl border border-white/10 rounded-full transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -71,19 +85,22 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black/80 backdrop-blur-xl md:hidden flex flex-col items-center justify-center px-6">
-          <div className="flex flex-col items-center gap-8 w-full max-w-sm">
+        <div className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center w-full max-w-[100vw] overflow-hidden">
+          <div className="flex flex-col items-center gap-6 sm:gap-8 w-full max-w-sm px-6">
             {navLinks.map((item) => (
               <a 
                 key={item} 
                 href={`#${item.toLowerCase().replace(' ', '-')}`} 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-3xl font-semibold text-gray-400 hover:text-white transition-colors"
+                className="text-2xl sm:text-3xl font-semibold text-gray-400 hover:text-white transition-colors"
               >
                 {item}
               </a>
             ))}
-            <button className="w-full mt-8 px-8 py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-lg shadow-[0_0_20px_rgba(209,81,59,0.3)]">
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="w-full mt-6 sm:mt-8 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg shadow-[0_0_20px_rgba(209,81,59,0.3)]"
+            >
               Start Project
             </button>
           </div>

@@ -26,11 +26,15 @@ html, body {
 }
 
 /* Ensure all containers stay within viewport */
-* {
+*, *::before, *::after {
+  box-sizing: border-box;
   max-width: 100vw;
 }
 
-
+/* Allow specific elements to expand if needed */
+section, nav, footer, div {
+  max-width: 100vw;
+}
 
 @keyframes wordSwap {
   0%,
