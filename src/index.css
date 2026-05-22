@@ -19,8 +19,8 @@ h6 {
   font-family: 'Outfit', sans-serif;
 }
 
-html {
-  overflow-y: scroll; /* Forces the browser to keep the scrollbar width reserved */
+html, body {
+  overflow-x: hidden; /* Forces the browser to keep the scrollbar width reserved */
 }
 
 

@@ -1,5 +1,11 @@
-import React from 'react';
+"use client";
+
+import { useEffect, useRef } from 'react';
 import { Monitor, Clapperboard, Target, Users, Search, ArrowUpRight } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const services = [
   {
@@ -45,18 +51,79 @@ const services = [
 ];
 
 export default function ServicesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null); // Added ref for mobile pinning
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  <style>{`
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-`}</style>
-  
-  // 1. REUSABLE HEADER TEXT
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+      if (cards.length === 0) return;
+
+      const mm = gsap.matchMedia();
+
+      // Reusable animation logic for both desktop and mobile
+      const buildCardAnimation = (tl: gsap.core.Timeline) => {
+        gsap.set(cards[0], { y: 0 });
+        gsap.set(cards.slice(1), { y: () => window.innerHeight });
+
+        cards.forEach((card, index) => {
+          if (index === 0) {
+            tl.to({}, { duration: 0.6 }); 
+            return;
+          }
+
+          tl.to(card, {
+            y: 0,
+            duration: 1, 
+            ease: 'power2.out',
+          });
+
+          tl.to({}, { duration: 0.6 }); 
+        });
+      };
+
+      // DESKTOP: Pin the whole section so text stays visible on the left
+      mm.add("(min-width: 1024px)", () => {
+        if (!sectionRef.current) return;
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: '+=2500', 
+            pin: true,
+            scrub: 1, 
+          },
+        });
+        buildCardAnimation(tl);
+      });
+
+      // MOBILE: Let text scroll away, ONLY pin when the cards container hits the top
+      mm.add("(max-width: 1023px)", () => {
+        if (!cardsContainerRef.current) return;
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: cardsContainerRef.current,
+            start: 'top 12%', // Leaves a small gap at the top on mobile so it doesn't touch the very edge
+            end: '+=2000', 
+            pin: true,
+            scrub: 1, 
+          },
+        });
+        buildCardAnimation(tl);
+      });
+
+    }, sectionRef);
+
+    return () => {
+      ctx.revert(); 
+    };
+  }, []);
+
+  const setCardRef = (el: HTMLDivElement | null, index: number) => {
+    cardRefs.current[index] = el;
+  };
+
   const HeaderText = (
     <>
       <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-[#D1513B]/20 bg-[#D1513B]/5 backdrop-blur-sm">
@@ -82,7 +149,6 @@ export default function ServicesSection() {
     </>
   );
 
-  // 2. REUSABLE STATS & CTA
   const StatsAndCTA = (
     <div className="flex flex-col items-center lg:items-start w-full">
       <div className="flex flex-wrap justify-center lg:justify-start gap-6 lg:gap-8 mb-10 lg:mb-12">
@@ -101,48 +167,51 @@ export default function ServicesSection() {
       </div>
 
       <button className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group">
-        Let’s Scale Your Brand
+        Let's Scale Your Brand
         <ArrowUpRight className="w-5 h-5 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
       </button>
     </div>
   );
 
   return (
-    <section 
-  id="services" 
-  className="relative w-full py-20 lg:py-40 bg-black text-white selection:bg-[#D1513B] selection:text-white"
->
+    <section
+      id="services"
+      ref={sectionRef}
+      className="relative w-full py-10 lg:py-20 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
+    >
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 relative">
-        
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-16 xl:gap-x-24">
           
-          {/* --- LEFT COLUMN / MOBILE TOP --- */}
-          {/* FIXED: Removed mobile sticky so it flows naturally and doesn't get covered by cards */}
-          <div className="lg:col-span-5 flex flex-col items-center text-center lg:items-start lg:text-left relative lg:sticky lg:top-32 z-10 h-fit pb-4 lg:pb-0">
-            
+          {/* ---------- LEFT COLUMN (Static Content) ---------- */}
+          <div className="lg:col-span-5 flex flex-col items-center text-center lg:items-start lg:text-left z-10 h-fit">
             {HeaderText}
-            
-            <div className="hidden lg:block mt-12 w-full">
-              {StatsAndCTA}
-            </div>
+            <div className="hidden lg:block mt-12 w-full">{StatsAndCTA}</div>
           </div>
 
-          {/* --- RIGHT COLUMN / MOBILE CARDS --- */}
-          <div className="lg:col-span-7 flex flex-col gap-6 lg:gap-24 z-10 relative">
+          {/* ---------- RIGHT COLUMN (Stacking Cards) ---------- */}
+          {/* Added `ref={cardsContainerRef}` so mobile can track just this container */}
+          <div 
+            ref={cardsContainerRef}
+            className="lg:col-span-7 relative h-[600px] lg:h-[650px] w-full z-0"
+          >
             {services.map((service, index) => {
               const Icon = service.icon;
-
               return (
                 <div
                   key={service.id}
-                  style={{ '--card-idx': index } as React.CSSProperties}
+                  ref={(el) => setCardRef(el, index)}
                   className="
-                    sticky
-                    top-[calc(100px+var(--card-idx)*20px)] 
-                    lg:top-[calc(120px+var(--card-idx)*35px)]
-                    w-full
-                    max-w-3xl
-                    mx-auto
+                    absolute left-0 w-full max-w-3xl mx-auto
                     rounded-[2rem] lg:rounded-[2.5rem]
                     border border-white/10
                     bg-[#0a0a0a] lg:bg-black/80
@@ -151,30 +220,32 @@ export default function ServicesSection() {
                     transition-all duration-500
                     group
                     hover:border-[#D1513B]/40
-                    hover:-translate-y-1
                     shadow-2xl lg:shadow-[0_-10px_30px_rgba(0,0,0,0.5)]
                   "
+                  style={{
+                    top: `${index * 30}px`, 
+                    zIndex: index + 1, 
+                  }}
                 >
-                  {/* GLOW */}
+                  {/* Hover glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
                     <div className="absolute -top-32 right-0 w-72 h-72 bg-[#D1513B]/20 blur-[100px] lg:blur-[120px] rounded-full" />
                   </div>
 
-                  {/* GRID LINES */}
+                  {/* Grid lines */}
                   <div className="absolute inset-0 opacity-[0.04] bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
                   <div className="relative z-10 p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between min-h-[320px] lg:min-h-[380px]">
-                    
-                    {/* TOP AREA */}
+                    {/* Top area */}
                     <div className="flex items-start justify-between mb-8 lg:mb-12">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-5">
                         
-                        {/* ICON */}
+                        {/* Icon */}
                         <div className="relative flex items-center justify-center w-12 h-12 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br from-[#D1513B] to-[#e38777] shadow-[0_10px_30px_rgba(209,81,59,0.35)] shrink-0">
                           <Icon className="w-5 h-5 lg:w-7 lg:h-7 text-white" />
                         </div>
 
-                        {/* CATEGORY & TITLE */}
+                        {/* Category & Title */}
                         <div>
                           <span className="text-[10px] lg:text-xs uppercase tracking-[0.25em] text-[#e38777] font-semibold">
                             {service.category}
@@ -185,20 +256,20 @@ export default function ServicesSection() {
                         </div>
                       </div>
 
-                      {/* BIG NUMBER */}
+                      {/* Big number */}
                       <span className="text-5xl lg:text-6xl font-black text-white/5 group-hover:text-[#D1513B]/10 transition-colors duration-500 absolute right-6 sm:right-8 top-6 sm:top-8 lg:static">
                         {service.id}
                       </span>
                     </div>
 
-                    {/* DESCRIPTION */}
+                    {/* Description */}
                     <div className="mb-8 lg:mb-10">
                       <p className="text-gray-300 text-sm sm:text-base lg:text-lg leading-relaxed font-light max-w-xl">
                         {service.description}
                       </p>
                     </div>
 
-                    {/* TAGS */}
+                    {/* Tags */}
                     <div className="flex flex-wrap gap-2 lg:gap-3">
                       {service.tags.map((tag) => (
                         <span
@@ -209,18 +280,17 @@ export default function ServicesSection() {
                         </span>
                       ))}
                     </div>
-
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* --- MOBILE BOTTOM CTA --- */}
+          {/* ---------- MOBILE BOTTOM CTA ---------- */}
           <div className="lg:hidden col-span-1 flex flex-col items-center text-center relative z-20 pt-8 w-full">
             {StatsAndCTA}
           </div>
-
+          
         </div>
       </div>
     </section>
