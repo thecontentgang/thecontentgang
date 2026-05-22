@@ -473,7 +473,7 @@ export default function CaseStudiesSection() {
   return (
     <section id="work" className="relative w-full bg-[#050505] text-white py-16 lg:py-24 overflow-hidden">
       
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#D1513B]/5 blur-[150px] rounded-full pointer-events-none" />
+  <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[100px] sm:blur-[150px] rounded-full pointer-events-none" />
       
       {/* HEADER */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 mb-12 lg:mb-16 text-center relative z-10">
