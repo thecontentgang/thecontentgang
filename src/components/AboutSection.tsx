@@ -155,7 +155,7 @@ export default function AboutSection() {
         }
       `}</style>
 
-      <section id="about-us" className="relative w-full py-16 md:py-24 lg:py-32 bg-[#050505] text-white overflow-hidden max-w-[100vw]">
+      <section id="about-us" className="relative w-full py-16 md:py-24 lg:py-24 bg-[#050505] text-white overflow-hidden max-w-[100vw]">
         
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] lg:w-[600px] h-[400px] sm:h-[500px] lg:h-[600px] rounded-full pointer-events-none z-0"

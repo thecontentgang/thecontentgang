@@ -401,7 +401,7 @@ export default function CaseStudiesSection() {
   };
 
   return (
-    <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-24 overflow-hidden max-w-[100vw]">
+    <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16 sm:py-20 lg:py-16 overflow-hidden max-w-[100vw]">
 
       <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[120px] sm:blur-[150px] rounded-full pointer-events-none" />
 
@@ -583,8 +583,8 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* FOOTER */}
-      <div className="max-w-[550px] mx-auto px-5 sm:px-8 mt-14 sm:mt-16 relative z-10">
-        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-8">
+      <div className="max-w-[350px] w-2/3 mx-auto px-5 sm:px-8 pb-10 sm:mt-16 relative z-10">
+        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-14">
           <div className="w-10 h-10 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
             <Store className="w-5 h-5 text-[#D1513B]" />
           </div>

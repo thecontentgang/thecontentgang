@@ -52,7 +52,7 @@ export default function Navbar() {
     transition-all duration-500
     ${
       showNavPill
-        ? "bg-black/30 backdrop-blur-xl border-b border-white/5"
+        ? "bg-black/30 backdrop-blur-xl "
         : "bg-transparent border-b border-transparent"
     }
   `}

@@ -183,7 +183,7 @@ export default function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="relative w-full py-12 sm:py-16 lg:py-30 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
+      className="relative w-full py-12 sm:py-16 lg:pt-14 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 relative w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-16 xl:gap-x-24">
