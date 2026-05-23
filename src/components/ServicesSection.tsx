@@ -56,7 +56,7 @@ export default function ServicesSection() {
       behavior: "smooth",
     });
   };
-  
+
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -103,17 +103,17 @@ export default function ServicesSection() {
       });
 
       mm.add("(max-width: 1023px)", () => {
-        if (!cardsContainerRef.current) return;
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: cardsContainerRef.current,
-            start: 'top 10%',
-            end: '+=2000',
-            pin: true,
-            scrub: 1,
-          },
+        const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
+
+        gsap.set(cards, {
+          clearProps: "all",
         });
-        buildCardAnimation(tl);
+
+        ScrollTrigger.getAll().forEach((trigger) => {
+          if (trigger.trigger === cardsContainerRef.current) {
+            trigger.kill();
+          }
+        });
       });
 
     }, sectionRef);
@@ -169,8 +169,8 @@ export default function ServicesSection() {
         </div>
       </div>
 
-      <button 
-        onClick={() => scrollTo("contact")} 
+      <button
+        onClick={() => scrollTo("contact")}
         className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group"
       >
         Let's Scale Your Brand
@@ -183,7 +183,7 @@ export default function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="relative w-full pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 sm:pb-16 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
+      className="relative w-full pt-14 sm:pt-28 md:pt-32 lg:pt-34 pb-12 sm:pb-16 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 relative w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-6 lg:gap-x-16 xl:gap-x-24">
@@ -197,7 +197,20 @@ export default function ServicesSection() {
           {/* RIGHT COLUMN - Cards Container */}
           <div
             ref={cardsContainerRef}
-            className="lg:col-span-7 relative h-[480px] sm:h-[520px] lg:h-[620px] w-full z-0"
+            className="
+  lg:col-span-7
+  relative
+  w-full
+  z-0
+
+  h-auto
+  lg:h-[620px]
+
+  flex
+  flex-col
+  gap-5
+  lg:block
+"
           >
             {services.map((service, index) => {
               const Icon = service.icon;
@@ -206,7 +219,12 @@ export default function ServicesSection() {
                   key={service.id}
                   ref={(el) => setCardRef(el, index)}
                   className="
-                    absolute left-0 w-full max-w-full sm:max-w-3xl mx-auto
+                    relative lg:absolute
+  left-0
+  w-full
+  max-w-full
+  sm:max-w-3xl
+  mx-auto
                     rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem]
                     border border-white/10
                     bg-[#0a0a0a] lg:bg-black/80
@@ -218,7 +236,7 @@ export default function ServicesSection() {
                     shadow-2xl
                   "
                   style={{
-                    top: `${index * 24}px`,
+                    top: window.innerWidth >= 1024 ? `${index * 24}px` : "0px",
                     zIndex: index + 1,
                   }}
                 >

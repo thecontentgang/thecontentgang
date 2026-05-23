@@ -45,8 +45,8 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           
           {/* Left Side */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-           <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm w-fit">
+          <div className="flex flex-col">
+            <div className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm w-fit">
               <span className="w-1.5 h-1.5 rounded-full bg-[#e38777] animate-pulse"></span>
               <span className="text-[10px] sm:text-xs font-medium tracking-widest text-gray-300 uppercase">
                 Start Your Growth
@@ -60,12 +60,12 @@ export default function ContactSection() {
               </span>
             </h2>
 
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-sm font-light mx-auto lg:mx-0">
+            <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-6 sm:mb-8 max-w-sm font-light">
               Drop your details below. We'll audit your current digital presence and show you exactly how we can engineer explosive growth for your business.
             </p>
 
             <div className="flex flex-col gap-4 sm:gap-5">
-              <a href="mailto:hello@thecontentgang.com" className="group flex items-center gap-3 w-fit mx-auto lg:mx-0">
+              <a href="mailto:hello@thecontentgang.com" className="group flex items-center gap-3 w-fit">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#e38777]/20 group-hover:border-[#e38777]/50 transition-colors">
                   <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300 group-hover:text-[#e38777] transition-colors" />
                 </div>
@@ -75,7 +75,7 @@ export default function ContactSection() {
                 </div>
               </a>
 
-              <a href="tel:+919876543210" className="group flex items-center gap-3 w-fit mx-auto lg:mx-0">
+              <a href="tel:+919876543210" className="group flex items-center gap-3 w-fit">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#e38777]/20 group-hover:border-[#e38777]/50 transition-colors">
                   <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300 group-hover:text-[#e38777] transition-colors" />
                 </div>
@@ -85,7 +85,7 @@ export default function ContactSection() {
                 </div>
               </a>
 
-              <div className="group flex items-center gap-3 w-fit mx-auto lg:mx-0">
+              <div className="group flex items-center gap-3 w-fit">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
                   <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300" />
                 </div>

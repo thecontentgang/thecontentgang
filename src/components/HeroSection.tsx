@@ -39,7 +39,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100dvh] pt-14 md:pt-5 py-14 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
+      className="relative w-full min-h-[100dvh] pt-8 md:pt-5 py-14 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
     >
       {/* === PREMIUM BACKGROUND === */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -57,7 +57,7 @@ export default function HeroSection() {
         {/* Top Badge */}
         <motion.div 
           variants={itemVariants} 
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-gray-300 backdrop-blur-md mt-10 mb-1 sm:mb-10"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-medium text-gray-300 backdrop-blur-md mt-10 mb-5 sm:mb-10"
         >
           <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D1513B]" />
           <span>Strategic Content & Digital Growth</span>
@@ -77,8 +77,8 @@ export default function HeroSection() {
     sm:leading-[0.98]
     lg:leading-[0.92]
     text-white
-    mb-5 sm:mb-6 lg:mb-8
-    max-w-[95vw] sm:max-w-5xl mx-auto
+    mb-2 sm:mb-3 lg:mb-4
+    max-w-[70vw] sm:max-w-5xl mx-auto
   "
 >
   
@@ -87,11 +87,11 @@ export default function HeroSection() {
     className="
       block
       text-[2.7rem]
-      xs:text-5xl
-      sm:text-6xl
-      md:text-7xl
-      lg:text-8xl
-      xl:text-[8.5rem]
+      xs:text-3xl
+      sm:text-4xl
+      md:text-5xl
+      lg:text-6xl
+      xl:text-[6.5rem]
     "
   >
     Content that
@@ -139,16 +139,14 @@ export default function HeroSection() {
           to-[#ffc5bc]
           
           text-[2.4rem]
-          xs:text-5xl
-          sm:text-6xl
-          md:text-7xl
-          lg:text-8xl
-          xl:text-[8.5rem]
-
+          xs:text-3xl
+          sm:text-4xl
+          md:text-5xl
+          lg:text-6xl
+          xl:text-[6.5rem]
           font-extrabold
           tracking-tight
           leading-none
-
           px-2 sm:px-3
           py-2 sm:py-3
 
@@ -181,7 +179,7 @@ export default function HeroSection() {
     className="mt-2 w-full max-w-[650px] mb-8 sm:mb-10 px-2 flex flex-col items-center text-center"
   >
     {/* Intro Text - Kept exactly as requested */}
-    <p className="text-sm sm:text-base md:text-lg text-gray-400 font-light leading-relaxed mb-6">
+    <p className="text-sm sm:text-base md:text-lg text-gray-400 font-light leading-relaxed mb-4">
       We help brands scale through strategic{" "}
       <strong className="font-semibold text-gray-200">Content</strong>
       , performance-driven{" "}
