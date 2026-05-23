@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import { Mail, Phone, MapPin, CheckCircle2, ArrowRight, ChevronDown, Check } from 'lucide-react';
 
 const serviceOptions = [
@@ -10,6 +11,14 @@ const serviceOptions = [
 ];
 
 export default function ContactSection() {
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+const [formData, setFormData] = useState({
+  fullName: '',
+  email: '',
+  phone: '',
+});
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
@@ -25,18 +34,45 @@ export default function ContactSection() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedService) {
-      alert("Please select a service.");
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!selectedService) {
+    alert("Please select a service.");
+    return;
+  }
+
+  if (!formRef.current) return;
+
+  try {
     setFormState('submitting');
-    setTimeout(() => setFormState('success'), 1500);
-  };
+
+    await emailjs.sendForm(
+      'service_wyt5coc',
+      'template_yw7lbj8',
+      formRef.current,
+      '3gRvMUheqa5jEjv6s'
+    );
+
+    setFormState('success');
+
+    setFormData({
+      fullName: '',
+      email: '',
+      phone: '',
+    });
+
+    setSelectedService('');
+
+  } catch (error) {
+    console.error(error);
+    alert('Something went wrong. Please try again.');
+    setFormState('idle');
+  }
+};
 
   return (
-    <section id="contact" className="relative w-full py-12 sm:py-16 md:py-24 bg-black text-white selection:bg-[#e38777] selection:text-white overflow-hidden max-w-[100vw]">
+    <section id="contact" className="relative w-full py-12 sm:py-16 md:py-10  bg-black text-white selection:bg-[#e38777] selection:text-white overflow-hidden max-w-[100vw]">
       
       <div className="absolute top-0 right-0 w-[300px] sm:w-[400px] lg:w-[500px] h-[300px] sm:h-[400px] lg:h-[500px] bg-[#D1513B]/10 blur-[80px] sm:blur-[100px] lg:blur-[120px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/4" />
 
@@ -98,117 +134,198 @@ export default function ContactSection() {
           </div>
 
           {/* Right Side: Form */}
-          <div className="bg-white/[0.03] border border-white/10 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-2xl relative max-w-full">
-            
-            {formState === 'success' ? (
-              <div className="flex flex-col items-center justify-center text-center h-full min-h-[250px] sm:min-h-[300px] animate-in fade-in zoom-in duration-500">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 sm:mb-5 border border-green-500/30">
-                  <CheckCircle2 className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Request Received!</h3>
-                <p className="text-gray-400 text-sm sm:text-base max-w-xs">
-                  We'll be in touch shortly to discuss how we can scale your brand.
-                </p>
-                <button 
-                  onClick={() => setFormState('idle')}
-                  className="mt-4 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
-                >
-                  Submit Another
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4 relative z-10">
-                
-                <div className="flex flex-col gap-1 sm:gap-1.5">
-                  <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">Full Name *</label>
-                  <input 
-                    type="text" 
-                    required
-                    placeholder="John Doe"
-                    className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
-                  />
-                </div>
+<div className="bg-white/[0.03] border border-white/10 rounded-2xl sm:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-2xl relative max-w-full">
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="flex flex-col gap-1 sm:gap-1.5">
-                    <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">Email Address *</label>
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="your email"
-                      className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1 sm:gap-1.5">
-                    <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">Phone Number *</label>
-                    <input 
-                      type="tel" 
-                      required
-                      placeholder="+91 93814 41618"
-                      className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
-                    />
-                  </div>
-                </div>
+  {formState === 'success' ? (
+    <div className="flex flex-col items-center justify-center text-center h-full min-h-[250px] sm:min-h-[300px] animate-in fade-in zoom-in duration-500">
+      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-4 sm:mb-5 border border-green-500/30">
+        <CheckCircle2 className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
+      </div>
 
-                {/* Custom Dropdown */}
-                <div className="flex flex-col gap-1 sm:gap-1.5" ref={dropdownRef}>
-                  <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">Service Needed *</label>
-                  <div className="relative">
-                    <div 
-                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                      className={`w-full bg-black/50 border rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm flex items-center justify-between cursor-pointer transition-all ${
-                        isDropdownOpen ? 'border-[#e38777] ring-1 ring-[#e38777]' : 'border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <span className={selectedService ? 'text-white text-sm' : 'text-gray-600 text-sm'}>
-                        {selectedService || 'Select a primary goal...'}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180 text-[#e38777]' : ''}`} />
-                    </div>
+      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
+        Request Received!
+      </h3>
 
-                    {isDropdownOpen && (
-                      <div className="absolute top-[calc(100%+6px)] left-0 w-full bg-zinc-900 border border-white/10 rounded-lg sm:rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-200">
-                        <div className="flex flex-col max-h-[180px] sm:max-h-[200px] overflow-y-auto py-1 sm:py-1.5">
-                          {serviceOptions.map((option) => (
-                            <button
-                              key={option}
-                              type="button"
-                              onClick={() => {
-                                setSelectedService(option);
-                                setIsDropdownOpen(false);
-                              }}
-                              className="w-full text-left px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:bg-white/5 transition-colors flex items-center justify-between group"
-                            >
-                              <span className="group-hover:text-[#e38777] transition-colors">{option}</span>
-                              {selectedService === option && <Check className="w-3 h-3 sm:w-4 sm:h-4 text-[#e38777]" />}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+      <p className="text-gray-400 text-sm sm:text-base max-w-xs">
+        We'll be in touch shortly to discuss how we can scale your brand.
+      </p>
 
-                <button 
-                  type="submit"
-                  disabled={formState === 'submitting'}
-                  className="mt-2 sm:mt-4 group w-full py-3 sm:py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:shadow-[0_0_20px_rgba(209,81,59,0.4)] disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  {formState === 'submitting' ? (
-                    <span className="flex items-center gap-2">
-                      Sending Details <span className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white"></span>
-                    </span>
-                  ) : (
-                    <>
-                      Get Your Strategy
-                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </button>
+      <button
+        onClick={() => setFormState('idle')}
+        className="mt-4 sm:mt-6 px-4 sm:px-5 py-2 text-xs sm:text-sm rounded-full border border-white/20 text-white hover:bg-white/10 transition-colors"
+      >
+        Submit Another
+      </button>
+    </div>
+  ) : (
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-3 sm:gap-4 relative z-10"
+    >
 
-              </form>
-            )}
+      {/* Full Name */}
+      <div className="flex flex-col gap-1 sm:gap-1.5">
+        <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">
+          Full Name *
+        </label>
+
+        <input
+          type="text"
+          required
+          name="full_name"
+          value={formData.fullName}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              fullName: e.target.value,
+            })
+          }
+          placeholder="John Doe"
+          className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
+        />
+      </div>
+
+      {/* Email + Phone */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+
+        {/* Email */}
+        <div className="flex flex-col gap-1 sm:gap-1.5">
+          <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">
+            Email Address *
+          </label>
+
+          <input
+            type="email"
+            required
+            name="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                email: e.target.value,
+              })
+            }
+            placeholder="your@email.com"
+            className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
+          />
+        </div>
+
+        {/* Phone */}
+        <div className="flex flex-col gap-1 sm:gap-1.5">
+          <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">
+            Phone Number *
+          </label>
+
+          <input
+            type="tel"
+            required
+            name="phone"
+            value={formData.phone}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                phone: e.target.value,
+              })
+            }
+            placeholder="+91 93814 41618"
+            className="w-full bg-black/50 border border-white/10 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-[#e38777] focus:ring-1 focus:ring-[#e38777] transition-all"
+          />
+        </div>
+
+      </div>
+
+      {/* Custom Dropdown */}
+      <div
+        className="flex flex-col gap-1 sm:gap-1.5"
+        ref={dropdownRef}
+      >
+        <label className="text-[10px] sm:text-xs font-medium text-gray-400 px-1">
+          Service Needed *
+        </label>
+
+        <div className="relative">
+
+          <div
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={`w-full bg-black/50 border rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-sm flex items-center justify-between cursor-pointer transition-all ${
+              isDropdownOpen
+                ? 'border-[#e38777] ring-1 ring-[#e38777]'
+                : 'border-white/10 hover:border-white/20'
+            }`}
+          >
+            <span className={selectedService ? 'text-white text-sm' : 'text-gray-600 text-sm'}>
+              {selectedService || 'Select a primary goal...'}
+            </span>
+
+            <ChevronDown
+              className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${
+                isDropdownOpen ? 'rotate-180 text-[#e38777]' : ''
+              }`}
+            />
           </div>
+
+          {isDropdownOpen && (
+            <div className="absolute top-[calc(100%+6px)] left-0 w-full bg-zinc-900 border border-white/10 rounded-lg sm:rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-200">
+
+              <div className="flex flex-col max-h-[180px] sm:max-h-[200px] overflow-y-auto py-1 sm:py-1.5">
+
+                {serviceOptions.map((option) => (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={() => {
+                      setSelectedService(option);
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full text-left px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:bg-white/5 transition-colors flex items-center justify-between group"
+                  >
+                    <span className="group-hover:text-[#e38777] transition-colors">
+                      {option}
+                    </span>
+
+                    {selectedService === option && (
+                      <Check className="w-3 h-3 sm:w-4 sm:h-4 text-[#e38777]" />
+                    )}
+                  </button>
+                ))}
+
+              </div>
+            </div>
+          )}
+
+          {/* Hidden Service Input */}
+          <input
+            type="hidden"
+            name="service"
+            value={selectedService}
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={formState === 'submitting'}
+        className="mt-2 sm:mt-4 group w-full py-3 sm:py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base hover:shadow-[0_0_20px_rgba(209,81,59,0.4)] disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2"
+      >
+        {formState === 'submitting' ? (
+          <span className="flex items-center gap-2">
+            Sending Details
+            <span className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white"></span>
+          </span>
+        ) : (
+          <>
+            Get Your Strategy
+
+            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+          </>
+        )}
+      </button>
+
+    </form>
+  )}
+</div>
 
         </div>
       </div>
