@@ -269,7 +269,7 @@ export default function ServicesSection() {
                       </div>
 
                       {/* Big number */}
-                      <span className="text-4xl sm:text-5xl lg:text-6xl font-black text-white/10 group-hover:text-[#D1513B]/10 transition-colors duration-500">
+                      <span className="text-4xl sm:text-5xl lg:text-6xl font-black text-white/90 group-hover:text-[#D1513B]/10 transition-colors duration-500">
                         {service.id}
                       </span>
                     </div>

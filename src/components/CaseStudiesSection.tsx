@@ -401,7 +401,7 @@ export default function CaseStudiesSection() {
   };
 
   return (
-    <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16 py-16 md:py-24 lg:py-24 overflow-hidden max-w-[100vw]">
+    <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16  md:py-24 lg:py-24 overflow-hidden max-w-[100vw]">
 
       <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-[#D1513B]/5 blur-[120px] sm:blur-[150px] rounded-full pointer-events-none" />
 
