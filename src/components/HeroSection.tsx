@@ -39,7 +39,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100dvh] pt-5 py-14 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
+      className="relative w-full min-h-[100dvh] pt-14 md:pt-5 py-14 flex flex-col items-center justify-center overflow-hidden bg-[#050505] text-white selection:bg-[#D1513B]/30"
     >
       {/* === PREMIUM BACKGROUND === */}
       <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -64,31 +64,115 @@ export default function HeroSection() {
         </motion.div>
 
         {/* HEADING */}
-        <motion.h1 
-          variants={itemVariants} 
-          className="text-6xl sm:text-5xl md:text-6xl lg:text-8xl font-extrabold tracking-tight leading-[1.15] sm:leading-[1.1] mb-3 sm:mb-4 max-w-5xl text-white flex flex-col items-center justify-center w-full"
-        >
-          <span className="block">Content that</span> 
+<motion.h1
+  variants={itemVariants}
+  className="
+    relative z-10
+    flex flex-col items-center justify-center
+    w-full
+    text-center
+    font-extrabold
+    tracking-tight
+    leading-[1]
+    sm:leading-[0.98]
+    lg:leading-[0.92]
+    text-white
+    mb-5 sm:mb-6 lg:mb-8
+    max-w-[95vw] sm:max-w-5xl mx-auto
+  "
+>
+  
+  {/* Top Line */}
+  <span
+    className="
+      block
+      text-[2.7rem]
+      xs:text-5xl
+      sm:text-6xl
+      md:text-7xl
+      lg:text-8xl
+      xl:text-[8.5rem]
+    "
+  >
+    Content that
+  </span>
+
+  {/* Rotating Gradient Text */}
+  <div
+    className="
+      relative
+      flex
+      items-center
+      justify-center
+      w-full
+      min-h-[70px]
+      sm:min-h-[90px]
+      md:min-h-[110px]
+      lg:min-h-[140px]
+      mt-2 sm:mt-3
+      px-2
+    "
+  >
+    <div
+      className="
+        relative
+        flex
+        items-center
+        justify-center
+        text-center
+        overflow-visible
+      "
+    >
+      <RotatingText
+        texts={[
+          "connects.",
+          "inspires.",
+          "converts.",
+          "scales brands."
+        ]}
+        mainClassName="
+          text-transparent
+          bg-clip-text
+          bg-gradient-to-r
+          from-[#D1513B]
+          via-[#e38777]
+          to-[#ffc5bc]
           
-          {/* ROTATING TEXT */}
-          <span className="relative flex justify-center mt-1 sm:mt-1 sm:inline-flex sm:ml-3 text-center sm:text-left min-w-[280px] sm:min-w-[auto]">
-            <RotatingText
-              texts={["connects.", "inspires.", "converts.", "scales brands."]}
-              mainClassName="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] via-[#e38777] to-[#ffc5bc] overflow-hidden py-1.5 sm:py-2"
-              splitLevelClassName="overflow-hidden pb-1"
-              staggerFrom="last"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "-120%" }}
-              staggerDuration={0.025}
-              transition={{ type: "spring", damping: 30, stiffness: 400 }}
-              rotationInterval={3000}
-              splitBy="characters"
-              auto={true}
-              loop={true}
-            />
-          </span>
-        </motion.h1>
+          text-[2.4rem]
+          xs:text-5xl
+          sm:text-6xl
+          md:text-7xl
+          lg:text-8xl
+          xl:text-[8.5rem]
+
+          font-extrabold
+          tracking-tight
+          leading-none
+
+          px-2 sm:px-3
+          py-2 sm:py-3
+
+          drop-shadow-[0_0_30px_rgba(209,81,59,0.18)]
+        "
+        splitLevelClassName="overflow-hidden pb-1"
+        staggerFrom="last"
+        initial={{ y: "110%", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: "-120%", opacity: 0 }}
+        staggerDuration={0.025}
+        transition={{
+          type: "spring",
+          damping: 30,
+          stiffness: 400,
+        }}
+        rotationInterval={3000}
+        splitBy="characters"
+        auto={true}
+        loop={true}
+      />
+    </div>
+  </div>
+</motion.h1>
 
         {/* SUBTEXT - Fixed width with Stats as Individual Buttons/Pills */}
 <div className="w-full flex justify-center">
@@ -112,10 +196,10 @@ export default function HeroSection() {
     </p>
 
     {/* Stats Buttons Container */}
-<div className="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-[700px] mx-auto">
+<div className="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-[700px] mx-auto w-full">
 
   {/* Button 1 */}
-  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+  <div className="inline-flex w-[calc(50%-6px)] sm:w-fit items-center justify-center px-3 sm:px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
     <svg
       className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
       fill="none"
@@ -130,7 +214,7 @@ export default function HeroSection() {
       />
     </svg>
 
-    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+    <span className="text-xs sm:text-base text-gray-300 leading-tight text-center">
       <strong className="font-semibold text-[#e38777]">
         28M+ views
       </strong>{" "}
@@ -139,7 +223,7 @@ export default function HeroSection() {
   </div>
 
   {/* Button 2 */}
-  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+  <div className="inline-flex w-[calc(50%-6px)] sm:w-fit items-center justify-center px-3 sm:px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
     <svg
       className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
       fill="none"
@@ -154,7 +238,7 @@ export default function HeroSection() {
       />
     </svg>
 
-    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+    <span className="text-xs sm:text-base text-gray-300 leading-tight text-center">
       <strong className="font-semibold text-[#e38777]">
         10,000+ leads
       </strong>{" "}
@@ -163,7 +247,7 @@ export default function HeroSection() {
   </div>
 
   {/* Button 3 */}
-  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+  <div className="inline-flex w-[calc(50%-6px)] sm:w-fit items-center justify-center px-3 sm:px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
     <svg
       className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
       fill="none"
@@ -178,7 +262,7 @@ export default function HeroSection() {
       />
     </svg>
 
-    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+    <span className="text-xs sm:text-base text-gray-300 leading-tight text-center">
       <strong className="font-semibold text-[#e38777]">
         ₹12.5Cr+ revenue
       </strong>{" "}
@@ -187,7 +271,7 @@ export default function HeroSection() {
   </div>
 
   {/* Button 4 */}
-  <div className="inline-flex w-fit items-center px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
+  <div className="inline-flex w-[calc(50%-6px)] sm:w-fit items-center justify-center px-3 sm:px-4 py-2.5 bg-white/5 hover:bg-white/10 transition-colors border border-white/10 rounded-full backdrop-blur-sm shadow-sm">
     <svg
       className="w-4 h-4 text-[#e38777] mr-2.5 flex-shrink-0"
       fill="none"
@@ -202,7 +286,7 @@ export default function HeroSection() {
       />
     </svg>
 
-    <span className="text-sm sm:text-base text-gray-300 whitespace-nowrap">
+    <span className="text-xs sm:text-base text-gray-300 leading-tight text-center">
       <strong className="font-semibold text-[#e38777]">
         50+ brands
       </strong>{" "}

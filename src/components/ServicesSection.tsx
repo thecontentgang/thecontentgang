@@ -136,7 +136,7 @@ export default function ServicesSection() {
         </span>
       </div>
 
-      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-4 sm:mb-5 leading-[1.1] lg:leading-[0.95]">
+      <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight mb-2 sm:mb-5 leading-[1.1] lg:leading-[0.95]">
         <span className="block text-white">We build</span>
         <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
           brands people
@@ -154,7 +154,7 @@ export default function ServicesSection() {
 
   const StatsAndCTA = (
     <div className="flex flex-col items-center lg:items-start w-full">
-      <div className="flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-8">
+      <div className="flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 lg:gap-8 mb-6 lg:mb-6">
         <div>
           <h3 className="text-2xl sm:text-3xl font-bold text-white">50+</h3>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Brands Scaled</p>
@@ -183,10 +183,10 @@ export default function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="relative w-full py-12 sm:py-16 lg:pt-14 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
+      className="relative w-full pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 sm:pb-16 bg-black text-white selection:bg-[#D1513B] selection:text-white overflow-hidden"
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 relative w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-16 xl:gap-x-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-6 lg:gap-x-16 xl:gap-x-24">
 
           {/* LEFT COLUMN */}
           <div className="lg:col-span-5 flex flex-col items-center text-center lg:items-start lg:text-left z-10">

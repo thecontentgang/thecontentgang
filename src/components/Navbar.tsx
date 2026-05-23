@@ -47,13 +47,13 @@ export default function Navbar() {
   className={`
     fixed top-0 inset-x-0 z-50
     px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24
-    py-4 md:py-2
+    py-2 md:py-2
     max-w-[100vw]
     transition-all duration-500
     ${
       showNavPill
-        ? "bg-black/30 backdrop-blur-xl "
-        : "bg-transparent border-b border-transparent"
+  ? "bg-gradient-to-b from-black/80 via-black/40 to-black/10 backdrop-blur-xl border-b border-white/5"
+  : "bg-transparent border-b border-transparent"
     }
   `}
 >

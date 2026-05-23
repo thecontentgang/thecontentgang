@@ -583,29 +583,104 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* FOOTER */}
-      <div className="max-w-[350px] w-2/3 mx-auto px-5 sm:px-8 pb-10 sm:mt-16 relative z-10">
-        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-white/[0.02] to-transparent border border-white/[0.08] flex flex-col sm:flex-row items-center gap-4 justify-center text-center sm:text-left mb-14">
-          <div className="w-10 h-10 rounded-full bg-[#D1513B]/10 flex items-center justify-center shrink-0">
-            <Store className="w-5 h-5 text-[#D1513B]" />
-          </div>
-          <div>
-            <h4 className="text-white font-bold text-base mb-1">And many more industries...</h4>
-            <p className="text-gray-400 text-sm leading-relaxed">
-              We provide tailored digital solutions for all types of businesses including <strong className="text-gray-200">Shopping Malls, Home Theaters, Jewellery Shops, and Skincare Brands</strong>.
-            </p>
-          </div>
-        </div>
+<div className="w-full max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12 relative z-10">
 
-        <div className="flex flex-col items-center justify-center text-center">
-          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-5">
-            Ready to become our next success story?
-          </h3>
-          <button onClick={() => scrollTo("contact")} className="group relative px-8 py-3.5 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base hover:shadow-[0_0_25px_rgba(209,81,59,0.4)] transition-all duration-300 flex items-center gap-2">
-            Get a Free Growth Audit
-            <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
+  {/* Industries Card */}
+  <div className="
+    relative overflow-hidden
+    rounded-3xl
+    border border-white/[0.08]
+    bg-gradient-to-br from-white/[0.04] via-white/[0.02] to-transparent
+    backdrop-blur-xl
+    p-5 sm:p-7 lg:p-8
+    mb-14 sm:mb-20
+  ">
+    
+    {/* Glow */}
+    <div className="absolute -top-20 -right-20 w-48 h-48 bg-[#D1513B]/10 blur-[100px] rounded-full pointer-events-none" />
+
+    <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-5 sm:gap-6 text-center sm:text-left">
+
+      {/* Icon */}
+      <div className="
+        shrink-0
+        w-14 h-14 sm:w-16 sm:h-16
+        rounded-2xl
+        bg-gradient-to-br from-[#D1513B]/20 to-[#e38777]/10
+        border border-[#D1513B]/20
+        flex items-center justify-center
+        shadow-[0_0_30px_rgba(209,81,59,0.15)]
+      ">
+        <Store className="w-6 h-6 sm:w-7 sm:h-7 text-[#D1513B]" />
       </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <h4 className="text-white font-bold text-xl sm:text-2xl mb-2">
+          And many more industries...
+        </h4>
+
+        <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-[650px]">
+          We provide tailored digital solutions for all types of businesses including{" "}
+          <strong className="text-gray-200 font-semibold">
+            Shopping Malls, Home Theaters, Jewellery Shops, and Skincare Brands
+          </strong>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  {/* CTA */}
+  <div className="flex flex-col items-center justify-center text-center">
+
+    <h3 className="
+      text-3xl sm:text-4xl lg:text-5xl
+      font-extrabold
+      tracking-tight
+      text-white
+      mb-5 sm:mb-6
+      leading-tight
+      max-w-[700px]
+    ">
+      Ready to become our next{" "}
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D1513B] to-[#e38777]">
+        success story?
+      </span>
+    </h3>
+
+    <p className="text-gray-400 text-sm sm:text-base lg:text-lg max-w-[550px] mb-8 sm:mb-10 leading-relaxed">
+      Let’s create campaigns, content, and systems that drive real business growth for your brand.
+    </p>
+
+    <button
+      onClick={() => scrollTo("contact")}
+      className="
+        group relative overflow-hidden
+        px-7 sm:px-9
+        py-3.5 sm:py-4
+        rounded-full
+        bg-gradient-to-r from-[#D1513B] to-[#e38777]
+        text-white
+        font-bold
+        text-sm sm:text-base
+        shadow-[0_10px_40px_rgba(209,81,59,0.25)]
+        hover:shadow-[0_0_35px_rgba(209,81,59,0.45)]
+        hover:-translate-y-1
+        transition-all duration-300
+        flex items-center gap-2.5
+      "
+    >
+      <span className="relative z-10">
+        Get a Free Growth Audit
+      </span>
+
+      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform duration-300" />
+
+      {/* Shine */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.15),transparent)] translate-x-[-100%] group-hover:translate-x-[100%]" />
+    </button>
+  </div>
+</div>
     </section>
   );
 }
