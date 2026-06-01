@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Monitor, Clapperboard, Target, Users, Search, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// 1. Use LayoutEffect on the client to avoid Flash of Unstyled Content (FOUC/Blank screens)
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 const services = [
   {
@@ -61,20 +64,36 @@ export default function ServicesSection() {
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
+  // 2. Swapped useEffect for useIsomorphicLayoutEffect
+  useIsomorphicLayoutEffect(() => {
     const ctx = gsap.context(() => {
       const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
       if (cards.length === 0) return;
 
       const mm = gsap.matchMedia();
 
-      const buildCardAnimation = (tl: gsap.core.Timeline) => {
+      mm.add("(min-width: 1024px)", () => {
+        if (!sectionRef.current) return;
+
+        // Force initial states immediately before render to avoid "blank" gap
         gsap.set(cards[0], { y: 0 });
-        gsap.set(cards.slice(1), { y: () => window.innerHeight });
+        // Use standard CSS '100vh' instead of window.innerHeight to prevent mobile URL bar jump lag
+        gsap.set(cards.slice(1), { y: "100vh" }); 
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: '+=2500',
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true, // Recalculate if user resizes the device
+          },
+        });
 
         cards.forEach((card, index) => {
           if (index === 0) {
-            tl.to({}, { duration: 0.6 });
+            tl.to({}, { duration: 0.5 });
             return;
           }
 
@@ -84,42 +103,25 @@ export default function ServicesSection() {
             ease: 'power2.out',
           });
 
-          tl.to({}, { duration: 0.6 });
+          tl.to({}, { duration: 0.5 });
         });
-      };
-
-      mm.add("(min-width: 1024px)", () => {
-        if (!sectionRef.current) return;
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: '+=2500',
-            pin: true,
-            scrub: 1,
-          },
-        });
-        buildCardAnimation(tl);
       });
 
       mm.add("(max-width: 1023px)", () => {
-        const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
-
-        gsap.set(cards, {
-          clearProps: "all",
-        });
-
-        ScrollTrigger.getAll().forEach((trigger) => {
-          if (trigger.trigger === cardsContainerRef.current) {
-            trigger.kill();
-          }
-        });
+        gsap.set(cards, { clearProps: "all" });
       });
 
     }, sectionRef);
 
+    // 3. Force ScrollTrigger to calculate heights AFTER dom is painted
+    // This catches instances where custom fonts or late images push the layout down
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
     return () => {
       ctx.revert();
+      clearTimeout(timeout);
     };
   }, []);
 
@@ -198,19 +200,17 @@ export default function ServicesSection() {
           <div
             ref={cardsContainerRef}
             className="
-  lg:col-span-7
-  relative
-  w-full
-  z-0
-
-  h-auto
-  lg:h-[620px]
-
-  flex
-  flex-col
-  gap-5
-  lg:block
-"
+              lg:col-span-7
+              relative
+              w-full
+              z-0
+              h-auto
+              lg:h-[620px]
+              flex
+              flex-col
+              gap-5
+              lg:block
+            "
           >
             {services.map((service, index) => {
               const Icon = service.icon;
@@ -220,11 +220,11 @@ export default function ServicesSection() {
                   ref={(el) => setCardRef(el, index)}
                   className="
                     relative lg:absolute
-  left-0
-  w-full
-  max-w-full
-  sm:max-w-3xl
-  mx-auto
+                    left-0
+                    w-full
+                    max-w-full
+                    sm:max-w-3xl
+                    mx-auto
                     rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem]
                     border border-white/10
                     bg-[#0a0a0a] lg:bg-black/80
@@ -234,15 +234,16 @@ export default function ServicesSection() {
                     group
                     hover:border-[#D1513B]/40
                     shadow-2xl
+                    transform-gpu will-change-transform /* 4. Added Hardware Acceleration classes */
                   "
                   style={{
-                    top: window.innerWidth >= 1024 ? `${index * 24}px` : "0px",
+                    top: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${index * 24}px` : "0px",
                     zIndex: index + 1,
                   }}
                 >
                   {/* Hover glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                    <div className="absolute -top-20 right-0 w-48 sm:w-72 h-48 sm:h-72 bg-[#D1513B]/20 blur-[80px] lg:blur-[120px] rounded-full" />
+                    <div className="absolute -top-20 right-0 w-48 sm:w-72 h-48 sm:h-72 bg-[#D1513B]/20 blur-[80px] lg:blur-[120px] rounded-full transform-gpu" />
                   </div>
 
                   {/* Grid lines */}
