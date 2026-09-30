@@ -3,7 +3,7 @@ import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
-import CaseStudiesSection from "./components/CaseStudiesSection";
+// import CaseStudiesSection from "./components/CaseStudiesSection";
 import ServicesSection  from "./components/ServicesSection";
 import SocialMediaBar from "./components/SocialMediaBar";
 
@@ -13,7 +13,7 @@ const App = () => {
     <Navbar />
     <HeroSection />
     <ServicesSection />
-    <CaseStudiesSection />
+    {/* <CaseStudiesSection /> */}
     <AboutSection />
     <ContactSection />
     <Footer />
