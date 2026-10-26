@@ -1,14 +1,9 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion, type Variants } from "motion/react";
 import RotatingText from "./RotatingText";
+import { scrollToSection } from "../lib/smoothScroll";
 
 export default function HeroSection() {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-    });
-  };
-
   // --- ANIMATION VARIANTS ---
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -78,7 +73,7 @@ export default function HeroSection() {
     lg:leading-[0.92]
     text-white
     mb-2 sm:mb-3 lg:mb-4
-    max-w-[70vw] sm:max-w-5xl mx-auto
+    max-w-[92vw] sm:max-w-5xl mx-auto
   "
 >
   
@@ -86,8 +81,7 @@ export default function HeroSection() {
   <span
     className="
       block
-      text-[2.7rem]
-      xs:text-3xl
+      text-[clamp(2rem,10vw,2.8rem)]
       sm:text-4xl
       md:text-5xl
       lg:text-6xl
@@ -131,15 +125,7 @@ export default function HeroSection() {
           "scales brands."
         ]}
         mainClassName="
-          text-transparent
-          bg-clip-text
-          bg-gradient-to-r
-          from-[#D1513B]
-          via-[#e38777]
-          to-[#ffc5bc]
-          
-          text-[2.4rem]
-          xs:text-3xl
+          text-[clamp(2rem,10vw,2.8rem)]
           sm:text-4xl
           md:text-5xl
           lg:text-6xl
@@ -156,14 +142,13 @@ export default function HeroSection() {
         staggerFrom="last"
         initial={{ y: "110%", opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        exit={{ y: "-120%", opacity: 0 }}
-        staggerDuration={0.025}
+        exit={{ y: "-110%", opacity: 0 }}
+        staggerDuration={0.02}
         transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 400,
+          duration: 0.55,
+          ease: [0.22, 1, 0.36, 1],
         }}
-        rotationInterval={3000}
+        rotationInterval={2800}
         splitBy="characters"
         auto={true}
         loop={true}
@@ -302,7 +287,7 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto z-30 px-4 sm:px-0"
         >
           <button
-            onClick={() => scrollTo("contact")}
+            onClick={() => scrollToSection("contact")}
             className="group w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-sm sm:text-base shadow-[0_0_25px_rgba(209,81,59,0.3)] hover:shadow-[0_0_35px_rgba(209,81,59,0.6)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2"
           >
             Start Your Project
@@ -310,7 +295,7 @@ export default function HeroSection() {
           </button>
 
           <button
-            onClick={() => scrollTo("services")}
+            onClick={() => scrollToSection("services")}
             className="w-full sm:w-auto px-8 sm:px-10 py-3.5 sm:py-4 bg-[#ffffff08] border border-white/10 text-gray-200 rounded-full font-bold text-sm sm:text-base hover:bg-white/10 hover:text-white transition-all duration-300 backdrop-blur-md"
           >
             Explore Services

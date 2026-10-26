@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Monitor, Clapperboard, Target, Users, Search, ArrowUpRight } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { scrollToSection } from "../lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,12 +55,6 @@ const services = [
 ];
 
 export default function ServicesSection() {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-    });
-  };
-
   const sectionRef = useRef<HTMLElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -76,17 +71,19 @@ export default function ServicesSection() {
         if (!sectionRef.current) return;
 
         // Force initial states immediately before render to avoid "blank" gap
+        gsap.set(cards, { transformOrigin: "50% 0%", force3D: true });
         gsap.set(cards[0], { y: 0 });
-        // Use standard CSS '100vh' instead of window.innerHeight to prevent mobile URL bar jump lag
-        gsap.set(cards.slice(1), { y: "100vh" }); 
+        gsap.set(cards.slice(1), { y: "100vh" });
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
             start: 'top top',
-            end: '+=2500',
+            end: () => `+=${Math.round(window.innerHeight * 3.2)}`,
             pin: true,
-            scrub: 1,
+            scrub: true, // Lenis already smooths the scroll; extra scrub lag feels floaty
+            anticipatePin: 1,
+            fastScrollEnd: true,
             invalidateOnRefresh: true, // Recalculate if user resizes the device
           },
         });
@@ -97,11 +94,18 @@ export default function ServicesSection() {
             return;
           }
 
+          // New card slides up while the one beneath recedes slightly
           tl.to(card, {
             y: 0,
             duration: 1,
-            ease: 'power2.out',
+            ease: 'power2.inOut',
           });
+          tl.to(cards[index - 1], {
+            scale: 0.95,
+            filter: 'brightness(0.55)',
+            duration: 1,
+            ease: 'power2.inOut',
+          }, '<');
 
           tl.to({}, { duration: 0.5 });
         });
@@ -115,13 +119,15 @@ export default function ServicesSection() {
 
     // 3. Force ScrollTrigger to calculate heights AFTER dom is painted
     // This catches instances where custom fonts or late images push the layout down
-    const timeout = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 100);
+    const timeout = setTimeout(() => ScrollTrigger.refresh(), 100);
+    const onLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', onLoad);
+    document.fonts?.ready.then(() => ScrollTrigger.refresh());
 
     return () => {
       ctx.revert();
       clearTimeout(timeout);
+      window.removeEventListener('load', onLoad);
     };
   }, []);
 
@@ -172,7 +178,7 @@ export default function ServicesSection() {
       </div>
 
       <button
-        onClick={() => scrollTo("contact")}
+        onClick={() => scrollToSection("contact")}
         className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#D1513B] to-[#e38777] text-white rounded-full font-bold text-base sm:text-lg hover:shadow-[0_0_30px_rgba(209,81,59,0.4)] transition-all duration-300 group"
       >
         Let's Scale Your Brand
@@ -227,14 +233,13 @@ export default function ServicesSection() {
                     mx-auto
                     rounded-2xl sm:rounded-3xl lg:rounded-[2.5rem]
                     border border-white/10
-                    bg-[#0a0a0a] lg:bg-black/80
-                    backdrop-blur-xl
+                    bg-[#0a0a0a]
                     overflow-hidden
-                    transition-all duration-500
+                    transition-[border-color,box-shadow] duration-500
                     group
                     hover:border-[#D1513B]/40
                     shadow-2xl
-                    transform-gpu will-change-transform /* 4. Added Hardware Acceleration classes */
+                    transform-gpu will-change-transform
                   "
                   style={{
                     top: typeof window !== 'undefined' && window.innerWidth >= 1024 ? `${index * 24}px` : "0px",

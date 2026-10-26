@@ -181,53 +181,64 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
       return () => clearInterval(intervalId);
     }, [next, rotationInterval, auto]);
 
+    // Exit must not inherit the enter stagger delay, otherwise old and new
+    // words overlap and the rotation looks slow / doubled.
+    const exitTarget = {
+      ...(exit as object),
+      transition: { duration: 0.28, ease: [0.4, 0, 1, 1] as const, delay: 0 }
+    } as TargetAndTransition;
+
+    const total = elements.reduce((sum, word) => sum + word.characters.length, 0);
+
     return (
-      <motion.span
-        className={cn('flex flex-wrap whitespace-pre-wrap relative', mainClassName)}
-        {...rest}
-        layout
-        transition={transition}
-      >
+      <span className={cn('relative inline-grid', mainClassName)} {...(rest as object)}>
         <span className="sr-only">{texts[currentTextIndex]}</span>
-        <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>
-          <motion.span
-            key={currentTextIndex}
-            className={cn(splitBy === 'lines' ? 'flex flex-col w-full' : 'flex flex-wrap whitespace-pre-wrap relative')}
-            layout
+        {/* Invisible sizer: reserves the width/height of the longest text so the
+            layout never shifts or re-wraps while words rotate. */}
+        {texts.map((t) => (
+          <span
+            key={t}
             aria-hidden="true"
+            className="invisible col-start-1 row-start-1 whitespace-nowrap font-extrabold select-none"
           >
-            {elements.map((wordObj, wordIndex, array) => {
-              const previousCharsCount = array
-                .slice(0, wordIndex)
-                .reduce((sum, word) => sum + word.characters.length, 0);
-              return (
-                <span key={wordIndex} className={cn('inline-flex', splitLevelClassName)}>
-                  {wordObj.characters.map((char, charIndex) => (
-                    <motion.span
-                      key={charIndex}
-                      initial={initial}
-                      animate={animate}
-                      exit={exit}
-                      transition={{
-                        ...transition,
-                        delay: getStaggerDelay(
-                          previousCharsCount + charIndex,
-                          array.reduce((sum, word) => sum + word.characters.length, 0)
-                        )
-                      }}
-                      // We inject the textColorClassName here directly on the animated character
-                      className={cn('inline-block font-extrabold', textColorClassName, elementLevelClassName)}
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-                  {wordObj.needsSpace && <span className="whitespace-pre"> </span>}
-                </span>
-              );
-            })}
-          </motion.span>
-        </AnimatePresence>
-      </motion.span>
+            {t}
+          </span>
+        ))}
+        <span className="col-start-1 row-start-1 flex items-center justify-center whitespace-nowrap" aria-hidden="true">
+          <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>
+            <motion.span
+              key={currentTextIndex}
+              className={cn(splitBy === 'lines' ? 'flex flex-col w-full' : 'flex whitespace-nowrap relative')}
+            >
+              {elements.map((wordObj, wordIndex, array) => {
+                const previousCharsCount = array
+                  .slice(0, wordIndex)
+                  .reduce((sum, word) => sum + word.characters.length, 0);
+                return (
+                  <span key={wordIndex} className={cn('inline-flex', splitLevelClassName)}>
+                    {wordObj.characters.map((char, charIndex) => (
+                      <motion.span
+                        key={charIndex}
+                        initial={initial}
+                        animate={animate}
+                        exit={exitTarget}
+                        transition={{
+                          ...transition,
+                          delay: getStaggerDelay(previousCharsCount + charIndex, total)
+                        }}
+                        className={cn('inline-block font-extrabold will-change-transform', textColorClassName, elementLevelClassName)}
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                    {wordObj.needsSpace && <span className="whitespace-pre"> </span>}
+                  </span>
+                );
+              })}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+      </span>
     );
   }
 );

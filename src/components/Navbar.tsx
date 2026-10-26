@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { lockScroll, scrollToSection } from '../lib/smoothScroll';
 
 const navLinks = ['Services', 'CaseStudies', 'About Us', 'Contact'];
 
@@ -9,17 +10,16 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showNavPill, setShowNavPill] = useState(false);
 
+  // Close the menu first so the scroll lock is released, then scroll via Lenis
+  const goTo = (id: string) => {
+    setIsMobileMenuOpen(false);
+    window.setTimeout(() => scrollToSection(id), 120);
+  };
+
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (!isMobileMenuOpen) return;
+    return lockScroll();
   }, [isMobileMenuOpen]);
 
   // Detect hero section scroll
@@ -36,7 +36,7 @@ export default function Navbar() {
 
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -66,10 +66,10 @@ export default function Navbar() {
                 src="/Content-LOGO.png"
                 alt="TheContentGang Logo"
                 className="
-                  h-18
-                  sm:h-20
-                  md:h-20
-                  lg:h-24
+                  h-14
+                  sm:h-16
+                  md:h-16
+                  lg:h-20
                   w-auto
                   object-contain
                   transition-all
@@ -159,9 +159,11 @@ export default function Navbar() {
           {/* Right Section */}
           <div className="flex-1 flex items-center justify-end gap-2 sm:gap-4">
             <button
+              onClick={() => scrollToSection('contact')}
               className="
                 hidden
                 md:block
+                whitespace-nowrap
                 px-5
                 lg:px-7
                 py-2.5
@@ -231,8 +233,10 @@ export default function Navbar() {
               justify-center
               w-full
               max-w-[100vw]
-              overflow-hidden
+              overflow-y-auto
+              py-24
             "
+            data-lenis-prevent
           >
             {/* BIGGER MOBILE LOGO */}
             <motion.img
@@ -257,8 +261,11 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.08 }}
                   key={item}
-                  href={`#${item.toLowerCase().replace(' ', '-')}`}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  href={`#${item.toLowerCase().replace(/\s+/g, '-')}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goTo(item.toLowerCase().replace(/\s+/g, '-'));
+                  }}
                   className="
                     text-2xl
                     sm:text-3xl
@@ -276,7 +283,7 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => goTo('contact')}
                 className="
                   w-full
                   mt-6

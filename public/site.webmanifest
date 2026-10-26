@@ -1,0 +1,11 @@
+{
+  "name": "The Content Gang",
+  "short_name": "Content Gang",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#D1513B",
+  "icons": [
+    { "src": "/Content-LOGO.png", "sizes": "any", "type": "image/png", "purpose": "any" }
+  ]
+}

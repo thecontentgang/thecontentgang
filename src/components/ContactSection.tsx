@@ -72,7 +72,7 @@ const [formData, setFormData] = useState({
 };
 
   return (
-    <section id="contact" className="relative w-full py-12 sm:py-16 md:py-10  bg-black text-white selection:bg-[#e38777] selection:text-white overflow-hidden max-w-[100vw]">
+    <section id="contact" className="relative w-full py-14 sm:py-20 md:py-24 bg-black text-white selection:bg-[#e38777] selection:text-white overflow-hidden max-w-[100vw]">
       
       <div className="absolute top-0 right-0 w-[300px] sm:w-[400px] lg:w-[500px] h-[300px] sm:h-[400px] lg:h-[500px] bg-[#D1513B]/10 blur-[80px] sm:blur-[100px] lg:blur-[120px] rounded-full pointer-events-none translate-x-1/3 -translate-y-1/4" />
 

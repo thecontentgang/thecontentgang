@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { initSmoothScroll } from "./lib/smoothScroll";
 import AboutSection from "./components/AboutSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
@@ -8,14 +10,18 @@ import ServicesSection  from "./components/ServicesSection";
 import SocialMediaBar from "./components/SocialMediaBar";
 
 const App = () => {
+  useEffect(() => initSmoothScroll(), []);
+
   return (
     <>
     <Navbar />
-    <HeroSection />
-    <ServicesSection />
-    <CaseStudiesSection />
-    <AboutSection />
-    <ContactSection />
+    <main>
+      <HeroSection />
+      <ServicesSection />
+      <CaseStudiesSection />
+      <AboutSection />
+      <ContactSection />
+    </main>
     <Footer />
     <SocialMediaBar />
     </>

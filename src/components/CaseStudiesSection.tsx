@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { brandsData, type BrandCaseStudy } from "./brandsData";
+import { scrollToSection } from "../lib/smoothScroll";
 
 // --- Safe Image Component (object-contain) ---
 const SafeImage = ({
@@ -54,6 +55,8 @@ const SafeImage = ({
         <div className="absolute inset-0 bg-[#0a0a0a] animate-pulse" />
       )}
       <img
+        loading="lazy"
+        decoding="async"
         src={displaySrc || fallbackSrc}
         alt={alt}
         className={`w-full h-full object-contain transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -96,6 +99,8 @@ const SafeLogo = ({
         </span>
       )}
       <img
+        loading="lazy"
+        decoding="async"
         src={logoSrc}
         alt={`${brandName} logo`}
         className={`w-full h-full object-cover ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -171,7 +176,7 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
   return (
     <div className="relative w-full h-full min-h-[350px] bg-[#0a0a0a] overflow-hidden group">
       
-      <div className="absolute top-9 left-4 z-20">
+      <div className="absolute top-6 left-6 z-20">
         <h3 className="text-white text-sm italic tracking-wide">
           Results
         </h3>
@@ -184,7 +189,7 @@ const DesktopCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.98 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 bg-[#0a0a0a] p-8"
+          className="absolute inset-0 bg-[#0a0a0a] px-8 pb-14 pt-16"
         >
           <div
             className={`w-full h-full flex items-center justify-center ${
@@ -394,12 +399,6 @@ const MobileCarousel = ({ brand }: { brand: BrandCaseStudy }) => {
   );
 };
 export default function CaseStudiesSection() {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
-    });
-  };
-
   return (
     <section id="casestudies" className="relative w-full bg-[#050505] text-white py-16  md:py-24 lg:py-24 overflow-hidden max-w-[100vw]">
 
@@ -422,7 +421,7 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* CASE STUDIES CARDS - Reduced from 750px to 600px */}
-      <div className="max-w-[480px] mx-auto px-5 sm:px-6 lg:px-8 flex flex-col gap-6 sm:gap-8 relative z-10 md:w-2/3">
+      <div className="w-full max-w-[520px] lg:max-w-[1120px] mx-auto px-5 sm:px-6 lg:px-10 flex flex-col gap-6 sm:gap-8 lg:gap-10 relative z-10">
         {brandsData.map((brand, index) => (
           <motion.div
             key={brand.id}
@@ -433,7 +432,7 @@ export default function CaseStudiesSection() {
             className="group relative flex flex-col lg:flex-row w-full bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden transition-all duration-400 hover:border-[#D1513B]/20"
           >
             {/* CONTENT SECTION - Redesigned */}
-            <div className="w-full lg:w-[50%] p-6 sm:p-8 flex flex-col bg-[#0a0a0a] border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+            <div className="w-full lg:w-[46%] p-6 sm:p-8 lg:p-10 flex flex-col bg-[#0a0a0a] border-b lg:border-b-0 lg:border-r border-white/[0.06]">
 
               {/* Top: Logo + Brand Name + Stats Row */}
               <div className="flex items-center gap-4 mb-5">
@@ -566,7 +565,7 @@ export default function CaseStudiesSection() {
 
             {/* IMAGES SECTION - Carousel */}
             {brand.id !== "jilamall" && brand.id !== "krimmy-thickshake" && (
-  <div className="w-full lg:w-[50%] bg-[#0a0a0a]">
+  <div className="w-full lg:w-[54%] bg-[#0a0a0a]">
     
     <div className="lg:hidden">
       <MobileCarousel brand={brand} />
@@ -583,7 +582,7 @@ export default function CaseStudiesSection() {
       </div>
 
       {/* FOOTER */}
-<div className="md:w-2/3 max-w-[700px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-6 relative z-10">
+<div className="w-full max-w-[760px] mx-auto px-5 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-6 relative z-10">
 
   {/* Industries Card */}
   <div className="
@@ -653,7 +652,7 @@ export default function CaseStudiesSection() {
     </p>
 
     <button
-      onClick={() => scrollTo("contact")}
+      onClick={() => scrollToSection("contact")}
       className="
         group relative overflow-hidden
         px-7 sm:px-9

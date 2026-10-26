@@ -237,7 +237,9 @@ export default function AboutSection() {
                 <div className="relative w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] lg:w-[130px] lg:h-[130px] bg-black border border-white/10 rounded-full shadow-[0_0_40px_rgba(209,81,59,0.3)] flex items-center justify-center backdrop-blur-md transition-transform duration-500 group-hover:scale-105 p-2 sm:p-3 overflow-hidden">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#D1513B]/20 to-transparent pointer-events-none" />
                   
-                  <img 
+                  <img
+                    loading="lazy"
+                    decoding="async"
                     src="/Content-LOGO.png"
                     alt="The Content Gang" 
                     className="w-full h-full object-contain relative z-10 drop-shadow-lg"

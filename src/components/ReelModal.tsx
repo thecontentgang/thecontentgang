@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { lockScroll } from '../lib/smoothScroll';
 
 interface ReelModalProps {
   isOpen: boolean;
@@ -44,8 +45,9 @@ const ReelModal: React.FC<ReelModalProps> = ({
   }, [handleFullscreenChange]);
 
   useEffect(() => {
+    let unlock: (() => void) | undefined;
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      unlock = lockScroll();
       setTimeout(() => {
         if (videoRef.current) {
           videoRef.current.play();
@@ -53,7 +55,6 @@ const ReelModal: React.FC<ReelModalProps> = ({
         }
       }, 300);
     } else {
-      document.body.style.overflow = 'unset';
       if (videoRef.current) {
         videoRef.current.pause();
       }
@@ -63,9 +64,7 @@ const ReelModal: React.FC<ReelModalProps> = ({
       }
     }
 
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    return () => unlock?.();
   }, [isOpen]);
 
   useEffect(() => {
